@@ -1,0 +1,11 @@
+# Node Modules
+node_modules
+
+# History files
+.history
+
+# Secret files
+.secret
+
+# Compiled files
+dist
