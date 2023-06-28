@@ -6,6 +6,8 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node dist/index.js",
+    "start:bot": "npm run start -- --app=bot",
+    "start:hook": "npm run start -- --app=hook",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -14,6 +16,7 @@
   "dependencies": {
     "discord.js": "^14.11.0",
     "dotenv": "^16.3.1",
+    "minimist": "^1.2.8",
     "web3": "^4.0.2",
     "winston": "^3.9.0"
   },

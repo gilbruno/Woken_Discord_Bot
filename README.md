@@ -18,7 +18,7 @@ npm install
 
 ## Discord
 
-Connect to the _Discord Developer Portal_ on the URL : _https://discord.com/developers_
+Connect to the _Discord Developer Portal_ on the URL : _https://discord.com/developers_.<br>
 If you have a Discord account, you will be connected with this account automatically.
 
 ### Create an App
