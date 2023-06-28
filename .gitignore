@@ -9,3 +9,6 @@ node_modules
 
 # Compiled files
 dist
+
+# Env files
+.env
