@@ -1,8 +1,10 @@
-const HELP_ACTION_GET_KECCAC_EVENT_NAME = 'Get Keccac Event Name'
-const HELP_ACTION_QUIT                  = 'Quit'
+const HELP_ACTION_GET_KECCAC_EVENT_NAME      = 'Get Keccac Event Name'
+const HELP_ACTION_GET_KECCAC_ALL_EVENTS_NAME = 'Get Keccac All Events Name'
+const HELP_ACTION_QUIT                       = 'Quit'
 
 const helpActions = [
     HELP_ACTION_GET_KECCAC_EVENT_NAME,
+    HELP_ACTION_GET_KECCAC_ALL_EVENTS_NAME,
     HELP_ACTION_QUIT
 ]
 
@@ -20,7 +22,7 @@ let eventNameChoice: InputChoice =
     name: 'eventName',
     message: 'Choose an event name',
     when: function when(answers:any) {
-        return answers.helpAction !== HELP_ACTION_QUIT
+        return answers.helpAction === HELP_ACTION_GET_KECCAC_EVENT_NAME
     }
 }
 
@@ -40,5 +42,6 @@ export {
     eventNameChoice,
     quit,
     HELP_ACTION_GET_KECCAC_EVENT_NAME,
+    HELP_ACTION_GET_KECCAC_ALL_EVENTS_NAME,
     HELP_ACTION_QUIT
 }
