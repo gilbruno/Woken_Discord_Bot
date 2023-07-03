@@ -76,6 +76,9 @@ Once the bot added/granted in the server, you will be able to login your bot to 
 
 
 
+# Addresses
+
+## Goerli TestNet
 
 
 
