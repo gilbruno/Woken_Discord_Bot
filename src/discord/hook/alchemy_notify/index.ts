@@ -1,5 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
+import { getMappingKeccacEvents } from "../../../utils/ethers.utils";
 
 export async function alchemy_notify(): Promise<void> {
     const app = express();
@@ -30,6 +31,13 @@ export async function alchemy_notify(): Promise<void> {
     // Home page
     app.get("/", (req, res) => {
       res.send('ALCHEMY NOTIFY APP ==> OK')
+    });
+
+    // Keccac Event Pages
+    app.get("/keccac_event", (req, res) => {
+      const keccacEvents = getMappingKeccacEvents()
+      const response = JSON.stringify(keccacEvents, null, 2)
+      res.send(response)
     });
 
     // Listen to Alchemy Notify webhook events

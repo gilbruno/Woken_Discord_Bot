@@ -1,8 +1,8 @@
 import inquirer from "inquirer"
 import { showTitleAndBanner } from "./utils"
 import { HELP_ACTION_GET_KECCAC_ALL_EVENTS_NAME, HELP_ACTION_GET_KECCAC_EVENT_NAME, HELP_ACTION_QUIT, eventNameChoice, helpList, quit } from "./question"
-import { getKeccac, getSignature } from "../utils/ethers.utils"
-const path = require('path')
+import { getAbiEvents, getKeccac, getMappingKeccacEvents, getSignature } from "../utils/ethers.utils"
+
 
 export class Inquirer {
 
@@ -18,23 +18,10 @@ export class Inquirer {
     }
 
     //----------------------------------------------------------------------------------------------------------
-    private getAbiEvents()
-    {
-        const rootDir = process.cwd()
-        const abiPath = path.join(rootDir, '/.abi/UniswapV2Factory.json');
-        const abi = require(abiPath)
-        //Filter by 'event' type
-        const abiEvents = abi.filter((elt:any) => {
-            return elt.type === 'event'
-        })
-        return abiEvents
-    }
-
-    //----------------------------------------------------------------------------------------------------------
     private async handleAnswers() 
     {
         if (this.answers.helpAction === HELP_ACTION_GET_KECCAC_EVENT_NAME) {
-            const abiEvents = this.getAbiEvents()
+            const abiEvents = getAbiEvents()
 
             const eventName = this.answers.eventName
 
@@ -55,18 +42,8 @@ export class Inquirer {
             }
         }
         else if (this.answers.helpAction === HELP_ACTION_GET_KECCAC_ALL_EVENTS_NAME) {
-            let mappingEventKeccac = {}
-
-            const abiEvents = this.getAbiEvents()
-            for (let index = 0; index < abiEvents.length; index++) {
-                const evt     = abiEvents[index];
-                const evtName = evt.name 
-                const signatureEvent = getSignature(evtName, evt.inputs)
-                const keccac = getKeccac(`${signatureEvent}`)
-                mappingEventKeccac[evtName] = keccac
-            }
             console.log('Mapping Event Name <===> Keccac : ')
-            console.log(mappingEventKeccac)
+            console.log(getMappingKeccacEvents())
         }
         else if (this.answers.helpAction === HELP_ACTION_QUIT) {
             console.log('Quit')

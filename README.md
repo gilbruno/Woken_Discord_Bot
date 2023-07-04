@@ -153,11 +153,26 @@ git clone https://github.com/gilbruno/Woken_Discord_Bot.git
 npm install
 ```
 
-## Step 9 : Compile the app
+## Step 10 : Compile the app
 
 ```sh
 npm run build
 ```
+
+## Step 11 : Create security rule to open HTTP for the right port
+
+Do it in AWS EC2 in _Security Groups_
+
+## Remarks
+
+To connect to your EC2 with SSH : 
+
+```sh
+ssh -i <path_to_your_pem_file_key> ec2-user@16.171.148.145
+```
+
+
+
 
 
 

@@ -1,5 +1,6 @@
 import { keccak256 } from "@ethersproject/keccak256";
 import { toUtf8Bytes } from "@ethersproject/strings";
+const path = require('path')
 
 export function getKeccac(signatureEvent: string) {
     const signatureEvent_ = toUtf8Bytes(signatureEvent)
@@ -19,4 +20,31 @@ export function getSignature(eventName: string, inputs: any[]) {
     }
     str += ')'
     return str
+}
+
+    //----------------------------------------------------------------------------------------------------------
+export function getAbiEvents()
+    {
+        const rootDir = process.cwd()
+        const abiPath = path.join(rootDir, '/.abi/UniswapV2Factory.json');
+        const abi = require(abiPath)
+        //Filter by 'event' type
+        const abiEvents = abi.filter((elt:any) => {
+            return elt.type === 'event'
+        })
+        return abiEvents
+    }
+
+export function getMappingKeccacEvents() {
+    let mappingEventKeccac = {}
+
+    const abiEvents = getAbiEvents()
+    for (let index = 0; index < abiEvents.length; index++) {
+        const evt     = abiEvents[index];
+        const evtName = evt.name 
+        const signatureEvent = getSignature(evtName, evt.inputs)
+        const keccac = getKeccac(`${signatureEvent}`)
+        mappingEventKeccac[evtName] = keccac
+    }
+    return mappingEventKeccac
 }
