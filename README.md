@@ -170,13 +170,85 @@ npm run build
 ## Step 11 : Create security rule to open HTTP for the right port
 
 Do it in AWS EC2 in _Security Groups_
+==> Open protocols and ports you need (SSH, TCP, TCP Custom, etc ...)
 
-## Remarks
+## Step 12 : Create an Elastic IP and associate with your EC2 instance
+
+This step is important to keep a fix IP and associate with a DNS
+==> See AWS tuto for this
+
+## Step 13 : Install NGINX
+
+This step is important to do a reverse proxy from NGINX to your NodeJS App
+As the port 80 is the port by default of Nginx, we do not need to specify a port in the URL
+So the URL without port will be able to be associated to tthe port 3000 of your app
+
+```sh
+apt install nginx
+```
+
+then launch the elastic IP in the URL without any port (80 by default)
+
+Ex : http://13.49.112.85/
+
+You must see this
+
+<img src="./src/images/Nginx.png" alt="Nginx" title="Nginx">
+
+If you see Apache.
+Apache is installed by default on your server.
+You must uninstall it and restart Nginx
+
+## Step 14 : Configure reverse Proxy
+
+Edit the following file : 
+
+```
+nano /etc/nginx/sites-available/default
+```
+
+In the _location_ block, write this : 
+
+```
+location / {
+    proxy_pass http://localhost:3000; #whatever port your app runs on
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_cache_bypass $http_upgrade;
+}
+```
+
+On the _root_ line, write the directory of your NodeJS app
+
+```
+root /home/ubuntu/woken/Woken_Discord_Bot;
+```
+
+Reload configuration :
+
+```sh
+nginx -t
+```
+
+Restart Nginx :
+
+```sh
+service nginx restart
+```
+
+Now you must see the home page of your NodeJS app 
+when launching the elastic IP of your EC2 instance in browser !!
+And not the homepage of Nginx !
+
+
+##  Remarks
 
 To connect to your EC2 with SSH : 
 
 ```sh
-ssh -i <path_to_your_pem_file_key> ec2-user@16.171.148.145
+ssh -i <path_to_your_pem_file_key> ec2-user@<IP_EC2_Instance>
 ```
 
 
