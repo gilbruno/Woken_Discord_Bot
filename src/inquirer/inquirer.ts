@@ -1,7 +1,7 @@
 import inquirer from "inquirer"
 import { showTitleAndBanner } from "./utils"
 import { HELP_ACTION_GET_KECCAC_ALL_EVENTS_NAME, HELP_ACTION_GET_KECCAC_EVENT_NAME, HELP_ACTION_QUIT, eventNameChoice, helpList, quit } from "./question"
-import { getAbiEvents, getKeccac, getMappingKeccacEvents, getSignature } from "../utils/ethers.utils"
+import { getAbiEvents, getKeccac, getMappingEventNameKeccac, getMappingKeccacEventName, getSignature, reverseJsonObject } from "../utils/ethers.utils"
 
 
 export class Inquirer {
@@ -43,7 +43,9 @@ export class Inquirer {
         }
         else if (this.answers.helpAction === HELP_ACTION_GET_KECCAC_ALL_EVENTS_NAME) {
             console.log('Mapping Event Name <===> Keccac : ')
-            console.log(getMappingKeccacEvents())
+            console.log(getMappingEventNameKeccac())
+            console.log('---------------')
+            console.log(getMappingKeccacEventName())
         }
         else if (this.answers.helpAction === HELP_ACTION_QUIT) {
             console.log('Quit')

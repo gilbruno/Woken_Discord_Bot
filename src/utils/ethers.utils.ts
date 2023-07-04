@@ -2,11 +2,13 @@ import { keccak256 } from "@ethersproject/keccak256";
 import { toUtf8Bytes } from "@ethersproject/strings";
 const path = require('path')
 
+//----------------------------------------------------------------------------------------------------------
 export function getKeccac(signatureEvent: string) {
     const signatureEvent_ = toUtf8Bytes(signatureEvent)
     return keccak256(signatureEvent_)
 }
 
+//----------------------------------------------------------------------------------------------------------
 export function getSignature(eventName: string, inputs: any[]) {
     let str = `${eventName}(`
     for (let i = 0; i < inputs.length; i++) {
@@ -22,7 +24,7 @@ export function getSignature(eventName: string, inputs: any[]) {
     return str
 }
 
-    //----------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------
 export function getAbiEvents()
     {
         const rootDir = process.cwd()
@@ -35,7 +37,18 @@ export function getAbiEvents()
         return abiEvents
     }
 
-export function getMappingKeccacEvents() {
+//----------------------------------------------------------------------------------------------------------
+export function reverseJsonObject(object: any) {
+    const flipped = Object
+        .entries(object)
+        .map(([key, value]) => [value, key]);
+
+    const reverseObject = Object.fromEntries(flipped);
+    return reverseObject
+}
+
+//----------------------------------------------------------------------------------------------------------
+export function getMappingEventNameKeccac() {
     let mappingEventKeccac = {}
 
     const abiEvents = getAbiEvents()
@@ -48,3 +61,8 @@ export function getMappingKeccacEvents() {
     }
     return mappingEventKeccac
 }
+
+export function getMappingKeccacEventName() {
+    return reverseJsonObject(getMappingEventNameKeccac())
+}
+

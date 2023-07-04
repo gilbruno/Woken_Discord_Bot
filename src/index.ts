@@ -19,11 +19,7 @@ if (argv.app == 'bot') {
     wokenBot.login()
 }
 else if (argv.app == 'hook') {
-
     alchemy_notify()
-    // const wokenHook = new WokenHook()
-    // wokenHook.setMsgNotification('2nd Notif from the Discord Hook')
-    // wokenHook.sendNotification()
 }
 
 else if (argv.app == 'event') {
