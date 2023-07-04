@@ -27,9 +27,14 @@ export async function alchemy_notify(): Promise<void> {
       res.sendStatus(200);
     });
   
+    // Home page
+    app.get("/", (req, res) => {
+      res.send('ALCHEMY NOTIFY APP ==> OK')
+    });
+
     // Listen to Alchemy Notify webhook events
     app.listen(port, () => {
-      console.log(`Example Alchemy Notify app listening at ${port}`);
+      console.log(`ALCHEMY NOTIFY APP listening at ${port}`);
     });
 }
   

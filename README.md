@@ -81,4 +81,98 @@ Once the bot added/granted in the server, you will be able to login your bot to 
 ## Goerli TestNet
 
 
+# Deploy App on Amazon EC2
+
+## Step 1 : Create a free Ubuntu EC2 instance on AWS
+
+Once created on AWS dashboard. Connect to it with SSH
+
+## Step 2 : Use 'root' user
+
+```sh
+sudo su
+```
+
+## Step 3 : Install Curl
+
+```sh
+apt install curl
+```
+
+## Step 4 : Install NVM
+
+```sh
+curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+```
+
+Then 
+
+```sh
+source ~/.bashrc
+```
+
+## Step 5 : Install Node using NVM
+
+```sh
+nvm install node
+```
+
+To install a specific version : 
+
+```sh
+nvm install 18.16.0 
+```
+
+## Step 6 : Install Git
+
+```sh
+apt update
+```
+
+then : 
+
+```sh
+apt install git-all
+```
+## Step 7 : Install PM2
+
+```sh
+nvm install node
+```
+
+
+## Step 8 : Clone the repository
+
+```sh
+git clone https://github.com/gilbruno/Woken_Discord_Bot.git
+```
+
+## Step 9 : Install node deps
+
+```sh
+npm install
+```
+
+## Step 9 : Compile the app
+
+```sh
+npm run build
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
