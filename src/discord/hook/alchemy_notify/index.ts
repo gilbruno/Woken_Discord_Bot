@@ -18,14 +18,16 @@ export async function alchemy_notify(): Promise<void> {
       if (logs.length === 0) {
         console.log("Empty logs array received, skipping");
       } else {
-        const mappingKeccacEvents = reverseJsonObject(getMappingKeccacEventName())
+        const mappingKeccacEvents = getMappingKeccacEventName()
         const wokenHook = new WokenHook()
         for (let i = 0; i < logs.length; i++) {
-          const topicEventName = logs[i].topics[0]   
-          const topic1 = "0x" + logs[i].topics[1].slice(26); // Remove '0x'
-          const data = parseInt(logs[i].data, 16) / 1e18; // Convert hexadecimal string to decimal number
+          const topicEventName = logs[i].topics[0]
+          const eventName      = mappingKeccacEvents[topicEventName] 
+          console.log(`eventName : ${eventName}`)   
+          //const topic1 = "0x" + logs[i].topics[1].slice(26); // Remove '0x'
+          //const data = parseInt(logs[i].data, 16) / 1e18; // Convert hexadecimal string to decimal number
           const from = logs[i].transaction.from.address
-          const message = `${topic1} event was emitted by ${from}`;
+          const message = `${eventName} event was emitted by ${from}`;
           // wokenHook.setMsgNotification('2nd Notif from the Discord Hook')
           // wokenHook.sendNotification()
           console.log(message); // Print message to terminal
