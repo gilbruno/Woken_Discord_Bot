@@ -13,7 +13,7 @@
     "start:hook": "npm run start -- --app=hook",
     "start:event": "npm run start -- --app=event",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "pm2:start:hook": "pm2 start dist/index.js -- --app=hook"
+    "pm2:start:hook": "pm2 start dist/index.js --name woken-bot -- --app=hook"
   },
   "keywords": [],
   "author": "",
