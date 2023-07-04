@@ -58,7 +58,6 @@ export class Inquirer {
             let mappingEventKeccac = {}
 
             const abiEvents = this.getAbiEvents()
-            console.log(abiEvents)
             for (let index = 0; index < abiEvents.length; index++) {
                 const evt     = abiEvents[index];
                 const evtName = evt.name 
