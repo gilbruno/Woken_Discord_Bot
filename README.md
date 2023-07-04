@@ -78,8 +78,16 @@ Once the bot added/granted in the server, you will be able to login your bot to 
 
 # Addresses
 
+Useful to do some tests and create LP pair
 ## Goerli TestNet
 
+### WKN Token 
+
+0x841699991e4129BA98385f50CDc4235CdF4A9397
+
+### USDC
+
+0xE06B56Fc1E19402E1a9DF3513E024a3b9847c9E5
 
 # Deploy App on Amazon EC2
 
