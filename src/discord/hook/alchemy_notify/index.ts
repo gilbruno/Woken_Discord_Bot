@@ -6,8 +6,8 @@ import { WokenHook } from "../woken.hook";
 export async function alchemy_notify(): Promise<void> {
     const app = express();
   
-    const port = "8080";
-  
+    const port = `${process.env.PORT}`;
+    
     // Parse the request body as JSON
     app.use(bodyParser.json());
     
