@@ -2,6 +2,8 @@ import { Network, Alchemy, AlchemySubscription } from 'alchemy-sdk';
 import { ethers } from "ethers";
 import { getKeccacByEventName } from '../../../utils/ethers.utils';
 import { Log } from '../../../logger/log';
+import { WokenHook } from '../woken.hook';
+import { AlchemyLogTransaction } from './types';
 
 export async function alchemy_websocket(): Promise<void> {
 
@@ -28,11 +30,17 @@ export async function alchemy_websocket(): Promise<void> {
   
   log.logger.info(`Subscription to event log for address ${factoryAddress} and event TimekeeperEnableProposal`)
 
+  const wokenHook = new WokenHook()
+
   const callBackTimekeeperEnableProposal = 
-    (tx: any) => {
-      console.log(`An event TimekeeperEnableProposal was emitted`)  
-      console.log(tx)
-    }
+    (tx: AlchemyLogTransaction) => {
+      const address = tx.address
+      let msgNotification = `Hey Woken DexAdmin ! `
+      msgNotification += `An event TimekeeperEnableProposal was emitted by address ${address}`      
+      console.log(msgNotification)
+      wokenHook.setMsgNotification(msgNotification)
+      wokenHook.sendNotification()
+}
 
   alchemy.ws.on(
       filterTimekeeperEnableProposal,

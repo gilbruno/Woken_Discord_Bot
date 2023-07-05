@@ -6,14 +6,13 @@ export class WokenHook {
     private log: Log
     private webHookClient: WebhookClient
     private msgNotification
-    private url = 'https://discord.com/api/webhooks/1123627152139632640/' as const
-
+    
     constructor() {
         this.log = new Log()
-
-        const webHookClient = new WebhookClient(
+        
+        this.webHookClient = new WebhookClient(
                 {
-                    url: this.url
+                    url: process.env.DISCORD_WEBHOOK_URL
                 }
             )
     }
@@ -23,7 +22,6 @@ export class WokenHook {
     }
 
     public sendNotification() {
-        this.log.logger.
         this.webHookClient.send(this.msgNotification)
     }
 
