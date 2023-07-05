@@ -11,6 +11,7 @@
     "start": "node dist/index.js",
     "start:bot": "npm run start -- --app=bot",
     "start:hook": "npm run start -- --app=hook",
+    "start:ws": "npm run start -- --app=websocket",
     "start:event": "npm run start -- --app=event",
     "test": "echo \"Error: no test specified\" && exit 1",
     "pm2:start:hook": "pm2 start dist/index.js --name woken-bot -- --app=hook"
@@ -24,6 +25,7 @@
     "body-parser": "^1.20.2",
     "discord.js": "^14.11.0",
     "dotenv": "^16.3.1",
+    "ethers": "^6.6.2",
     "express": "^4.18.2",
     "figlet": "^1.6.0",
     "inquirer": "^8.2.5",

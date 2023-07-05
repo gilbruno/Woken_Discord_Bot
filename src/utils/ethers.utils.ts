@@ -62,6 +62,12 @@ export function getMappingEventNameKeccac() {
     return mappingEventKeccac
 }
 
+//----------------------------------------------------------------------------------------------------------
+export function getKeccacByEventName(eventName: string) {
+    const mapping = getMappingEventNameKeccac()
+    return mapping[eventName]
+}    
+
 export function getMappingKeccacEventName() {
     return reverseJsonObject(getMappingEventNameKeccac())
 }
