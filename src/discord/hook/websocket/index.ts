@@ -34,8 +34,6 @@ export async function alchemy_websocket(): Promise<void> {
     topics: [getKeccacByEventName('ForceOpenProposal')]
   }
 
-  log.logger.info(`Subscription to event log for address ${factoryAddress} and event TimekeeperEnableProposal`)
-
   const wokenHook = new WokenHook()
 
   //----------------------------------------------------------------------------------------------------------
@@ -68,19 +66,22 @@ export async function alchemy_websocket(): Promise<void> {
     sendNotificationsToDiscordChannel(address, 'ForceOpenProposal')
   }
 
+  log.logger.info(`Subscription to event log for address ${factoryAddress} and event TimekeeperEnableProposal`)
   //TimekeeperEnableProposal Subscription
   alchemy.ws.on(
       filterTimekeeperEnableProposal,
       callBackTimekeeperEnableProposal
   );
 
+  log.logger.info(`Subscription to event log for address ${factoryAddress} and event TimekeeperProposal`)
   //TimekeeperProposal Subscription
   alchemy.ws.on(
     filterTimekeeperProposal,
     callBackTimekeeperProposal
   );
 
-  //TimekeeperProposal Subscription
+  log.logger.info(`Subscription to event log for address ${factoryAddress} and event ForceOpenProposal`)
+  //ForceOpenProposal Subscription
   alchemy.ws.on(
     filterForceOpenProposal,
     callBackForceOpenProposal
