@@ -5,7 +5,6 @@ import { Inquirer } from "./inquirer/inquirer";
 import { alchemy_websocket } from "./discord/hook/websocket";
 
 
-const abi = require
 dotenv.config()
 
 const argv = require('minimist')(process.argv.slice(2));
