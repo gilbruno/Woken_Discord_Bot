@@ -45,7 +45,7 @@ export class Inquirer {
             console.log('Mapping Event Name <===> Keccac : ')
             console.log(getMappingEventNameKeccac())
             console.log('---------------')
-            console.log(getMappingKeccacEventName())
+            //console.log(getMappingKeccacEventName())
         }
         else if (this.answers.helpAction === HELP_ACTION_QUIT) {
             console.log('Quit')

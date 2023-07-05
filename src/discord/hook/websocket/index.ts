@@ -1,5 +1,4 @@
 import { Network, Alchemy, AlchemySubscription } from 'alchemy-sdk';
-import { ethers } from "ethers";
 import { getKeccacByEventName } from '../../../utils/ethers.utils';
 import { Log } from '../../../logger/log';
 import { WokenHook } from '../woken.hook';
@@ -13,7 +12,6 @@ export async function alchemy_websocket(): Promise<void> {
 
   const factoryAddress = process.env.FACTORY_ADDRESS
   
-  // Optional Config object, but defaults to demo api-key and eth-mainnet.
   const settings = {
     apiKey: apiKey, // Replace with your Alchemy API Key.
     network: Network.ETH_GOERLI, // Replace with your network.
@@ -21,30 +19,71 @@ export async function alchemy_websocket(): Promise<void> {
   
   const alchemy = new Alchemy(settings);
   
-  //TimekeeperEnableProposal Topic
-  
   const filterTimekeeperEnableProposal = {
     address: factoryAddress,
     topics: [getKeccacByEventName('TimekeeperEnableProposal')]
   }
   
+  const filterTimekeeperProposal = {
+    address: factoryAddress,
+    topics: [getKeccacByEventName('TimekeeperProposal')]
+  }
+
+  const filterForceOpenProposal = {
+    address: factoryAddress,
+    topics: [getKeccacByEventName('ForceOpenProposal')]
+  }
+
   log.logger.info(`Subscription to event log for address ${factoryAddress} and event TimekeeperEnableProposal`)
 
   const wokenHook = new WokenHook()
 
+  //----------------------------------------------------------------------------------------------------------
+  const sendNotificationsToDiscordChannel = (address: string, eventName: string) => {
+    let msgNotification = `Hey Woken DexAdmin ! `
+    msgNotification += `An event ${eventName} was emitted by address ${address}`      
+    console.log(msgNotification)
+    wokenHook.setMsgNotification(msgNotification)
+    wokenHook.sendNotification()
+  }
+
+  //----------------------------------------------------------------------------------------------------------
   const callBackTimekeeperEnableProposal = 
     (tx: AlchemyLogTransaction) => {
       const address = tx.address
-      let msgNotification = `Hey Woken DexAdmin ! `
-      msgNotification += `An event TimekeeperEnableProposal was emitted by address ${address}`      
-      console.log(msgNotification)
-      wokenHook.setMsgNotification(msgNotification)
-      wokenHook.sendNotification()
-}
+      sendNotificationsToDiscordChannel(address, 'TimekeeperEnableProposal')
+    }
 
+  //----------------------------------------------------------------------------------------------------------
+  const callBackTimekeeperProposal = 
+  (tx: AlchemyLogTransaction) => {
+    const address = tx.address
+    sendNotificationsToDiscordChannel(address, 'TimekeeperProposal')
+  }
+
+  //----------------------------------------------------------------------------------------------------------
+  const callBackForceOpenProposal = 
+  (tx: AlchemyLogTransaction) => {
+    const address = tx.address
+    sendNotificationsToDiscordChannel(address, 'ForceOpenProposal')
+  }
+
+  //TimekeeperEnableProposal Subscription
   alchemy.ws.on(
       filterTimekeeperEnableProposal,
       callBackTimekeeperEnableProposal
+  );
+
+  //TimekeeperProposal Subscription
+  alchemy.ws.on(
+    filterTimekeeperProposal,
+    callBackTimekeeperProposal
+  );
+
+  //TimekeeperProposal Subscription
+  alchemy.ws.on(
+    filterForceOpenProposal,
+    callBackForceOpenProposal
   );
 
 }  
