@@ -2,7 +2,7 @@
 # Introduction
 
 This tool aims at listening the smart contracts of https://woken.exchange/ <br>
-and push notifications on specific events on the smart contract
+and push notifications in Discord channels on specific events on the smart contract
 
 
 <img src="./src/images/Woken_Exchange.png" alt="Woken Exchange" title="Optional title">
