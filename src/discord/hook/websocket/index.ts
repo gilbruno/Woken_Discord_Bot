@@ -7,10 +7,9 @@ import { AlchemyLogTransaction } from './types';
 export async function alchemy_websocket(): Promise<void> {
 
   const log = new Log()
-
   const apiKey = process.env.ALCHEMY_API_KEY
-
   const factoryAddress = process.env.FACTORY_ADDRESS
+  
   
   const settings = {
     apiKey: apiKey, // Replace with your Alchemy API Key.
@@ -54,16 +53,16 @@ export async function alchemy_websocket(): Promise<void> {
 
   //----------------------------------------------------------------------------------------------------------
   const callBackTimekeeperProposal = 
-  (tx: AlchemyLogTransaction) => {
-    const address = tx.address
-    sendNotificationsToDiscordChannel(address, 'TimekeeperProposal')
+    (tx: AlchemyLogTransaction) => {
+      const address = tx.address
+      sendNotificationsToDiscordChannel(address, 'TimekeeperProposal')
   }
 
   //----------------------------------------------------------------------------------------------------------
   const callBackForceOpenProposal = 
-  (tx: AlchemyLogTransaction) => {
-    const address = tx.address
-    sendNotificationsToDiscordChannel(address, 'ForceOpenProposal')
+    (tx: AlchemyLogTransaction) => {
+      const address = tx.address
+      sendNotificationsToDiscordChannel(address, 'ForceOpenProposal')
   }
 
   log.logger.info(`Subscription to event log for address ${factoryAddress} and event TimekeeperEnableProposal`)

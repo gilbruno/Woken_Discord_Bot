@@ -155,7 +155,7 @@ apt install git-all
 ## Step 7 : Install PM2
 
 ```sh
-nvm install node
+npm install pm2 -g
 ```
 
 
