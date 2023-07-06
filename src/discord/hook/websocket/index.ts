@@ -160,28 +160,25 @@ export async function alchemy_websocket(): Promise<void> {
   }
 
   //TEST 
-  await getTransactionInfos('0x345d6797a6ee7e9332e2d320b7a60369f61d7cd32fde067ccd6253f4e702a77d')
+  //await getTransactionInfos('0x345d6797a6ee7e9332e2d320b7a60369f61d7cd32fde067ccd6253f4e702a77d')
 
-  log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${TIME_KEEPER_ENABLE_PROPOSAL}`)
+  const subscribeToEvent = (eventName: eventName, callBack: (tx: AlchemyLogTransaction) => void) => {
+      const filter = {
+          address: factoryAddress,
+          topics: [getKeccacByEventName(eventName)]
+      }
+      alchemy.ws.on(filter, callBack);
+  }
+
   //TimekeeperEnableProposal Subscription
-  alchemy.ws.on(
-      filterTimekeeperEnableProposal,
-      callBackTimekeeperEnableProposal
-  );
-
-  log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${TIME_KEEPER_PROPOSAL}`)
+  log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${TIME_KEEPER_ENABLE_PROPOSAL}`)
+  subscribeToEvent(TIME_KEEPER_ENABLE_PROPOSAL, callBackTimekeeperEnableProposal)
   //TimekeeperProposal Subscription
-  alchemy.ws.on(
-    filterTimekeeperProposal,
-    callBackTimekeeperProposal
-  );
-
-  log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${FORCE_OPEN_PROPOSAL}`)
+  log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${TIME_KEEPER_PROPOSAL}`)
+  subscribeToEvent(TIME_KEEPER_PROPOSAL, callBackTimekeeperProposal)
   //ForceOpenProposal Subscription
-  alchemy.ws.on(
-    filterForceOpenProposal,
-    callBackForceOpenProposal
-  );
+  log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${FORCE_OPEN_PROPOSAL}`)
+  subscribeToEvent(FORCE_OPEN_PROPOSAL, callBackForceOpenProposal)
 
 }  
 
