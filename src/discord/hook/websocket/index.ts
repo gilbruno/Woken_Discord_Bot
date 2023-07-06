@@ -1,16 +1,20 @@
-import { Network, Alchemy, AlchemySubscription } from 'alchemy-sdk';
-import { getKeccacByEventName } from '../../../utils/ethers.utils';
+import { Network, Alchemy, Utils, Wallet, Contract } from 'alchemy-sdk';
+import { getAbi, getKeccacByEventName } from '../../../utils/ethers.utils';
 import { Log } from '../../../logger/log';
 import { WokenHook } from '../woken.hook';
-import { AlchemyLogTransaction, network, networkSchema, networkType } from './types';
-import { joinString } from '../../../utils/utils';
+import { AlchemyLogTransaction, eventName, network, networkSchema, networkType } from './types';
 
 export async function alchemy_websocket(): Promise<void> {
 
   const log = new Log()
   const apiKey         = process.env.ALCHEMY_API_KEY
   const factoryAddress = process.env.FACTORY_ADDRESS
+  const privateKey     = process.env.PRIVATE_KEY
   let networkSet: networkType = process.env.NETWORK 
+  
+  const TIME_KEEPER_ENABLE_PROPOSAL = 'TimekeeperEnableProposal' as const
+  const TIME_KEEPER_PROPOSAL        = 'TimekeeperProposal' as const
+  const FORCE_OPEN_PROPOSAL         = 'ForceOpenProposal' as const
   
   const network = {
     type: networkSet
@@ -30,68 +34,149 @@ export async function alchemy_websocket(): Promise<void> {
   
   const alchemy = new Alchemy(settings);
   
+  const provider = await alchemy.config.getProvider();
+  const signer   = new Wallet(privateKey, provider)
+
   const filterTimekeeperEnableProposal = {
     address: factoryAddress,
-    topics: [getKeccacByEventName('TimekeeperEnableProposal')]
+    topics: [getKeccacByEventName(TIME_KEEPER_ENABLE_PROPOSAL)]
   }
   
   const filterTimekeeperProposal = {
     address: factoryAddress,
-    topics: [getKeccacByEventName('TimekeeperProposal')]
+    topics: [getKeccacByEventName(TIME_KEEPER_PROPOSAL)]
   }
 
   const filterForceOpenProposal = {
     address: factoryAddress,
-    topics: [getKeccacByEventName('ForceOpenProposal')]
+    topics: [getKeccacByEventName(FORCE_OPEN_PROPOSAL)]
   }
 
   const wokenHook = new WokenHook()
 
   //----------------------------------------------------------------------------------------------------------
-  const sendNotificationsToDiscordChannel = (address: string, eventName: string) => {
-    let msgNotification = `Hey Woken DexAdmin ! `
-    msgNotification += `An event ${eventName} was emitted by address ${address}`      
+  const sendNotificationsToDiscordChannel = async (eventName: eventName, tx: AlchemyLogTransaction) => {
+    const txHash   = tx.transactionHash
+    const txInfos  = await getTransactionInfos(txHash)
+    const signerTx = txInfos.from
+    let addressPair: string
+    let tokensPair: string
+    let value: string
+    let pairAdmin: string
+
+    if (eventName === 'TimekeeperEnableProposal') {
+      addressPair = Utils.hexValue(txInfos.logs[0].topics[1])
+      tokensPair  = await getTokensPair(addressPair)
+      value       = Utils.hexValue(txInfos.logs[0].data)
+      pairAdmin   = await getPairAdmin(addressPair)
+    } 
+
+    let msgNotification = `Hey Woken DexAdmin ! \n`
+    
+    msgNotification += `An event ${eventName} was emitted by signer address ${signerTx} \n`
+    msgNotification += `  ==> Pair : ${tokensPair} \n`
+    msgNotification += `  ==> Value : ${value} \n`
+    msgNotification += `  ==> DexAdmin :  ${pairAdmin}\n`
+    msgNotification += `------------------------------------`
+
     console.log(msgNotification)
     wokenHook.setMsgNotification(msgNotification)
     wokenHook.sendNotification()
   }
 
+
+  //----------------------------------------------------------------------------------------------------------
+  const getPairAdmin = async (addressPair: string) => {
+    const factoryAbi = getAbi('UniswapV2Factory')
+    // Load the contract
+    const factoryContract = new Contract(factoryAddress, factoryAbi, signer);
+    const pairAdmin = await factoryContract.pairAdmin(addressPair)
+    log.logger.info(`PAIR ADMIN : ${pairAdmin}`)
+    return pairAdmin
+  }
+
+  //----------------------------------------------------------------------------------------------------------
+  const getTransactionInfos = async(txHash: string) => {
+    //Call the method to return array of logs
+    let txInfos = await alchemy.core.getTransactionReceipt(txHash)
+    const txInfosLogs = txInfos.logs[0]
+    //Logging the response to the console
+    log.logger.info(JSON.stringify(txInfos, null, 2))
+
+    return txInfos
+
+  }
+
+  //----------------------------------------------------------------------------------------------------------
+  const getLogs = async(blockHash: string, eventName: string, blockNumber: number) => {
+    //Call the method to return array of logs
+    let response = await alchemy.core.getLogs({blockHash})
+
+    //Filter response by blockNumber 
+    const logs = response.filter(
+      (response_elt: any) => {
+        return (response_elt.blockNumber === blockNumber 
+          && response_elt.topics[0] == getKeccacByEventName(eventName))
+      }
+      )
+    //Logging the response to the console
+    log.logger.info(JSON.stringify(logs, null, 2))
+
+    return logs
+
+  }
+
+  //----------------------------------------------------------------------------------------------------------
+  const getTokensPair = async(addressPair: string) => {
+      const factoryAbi = getAbi('UniswapV2Factory')
+      // Load the contract
+      const factoryContract = new Contract(factoryAddress, factoryAbi, signer);
+      const pair = await factoryContract.getTokens(addressPair)
+      log.logger.info(`PAIR : ${pair}`)
+      return pair
+  }
+
   //----------------------------------------------------------------------------------------------------------
   const callBackTimekeeperEnableProposal = 
-    (tx: AlchemyLogTransaction) => {
+    async (tx: AlchemyLogTransaction) => {
       const address = tx.address
-      sendNotificationsToDiscordChannel(address, 'TimekeeperEnableProposal')
+      log.logger.info(JSON.stringify(tx))
+      const tokensPair = await getTokensPair('0x948055835585078489BaDc7AB3543aA73445180e')
+      sendNotificationsToDiscordChannel(TIME_KEEPER_ENABLE_PROPOSAL, tx)
     }
 
   //----------------------------------------------------------------------------------------------------------
   const callBackTimekeeperProposal = 
-    (tx: AlchemyLogTransaction) => {
+    async (tx: AlchemyLogTransaction) => {
       const address = tx.address
-      sendNotificationsToDiscordChannel(address, 'TimekeeperProposal')
+      sendNotificationsToDiscordChannel(TIME_KEEPER_PROPOSAL, tx)
   }
 
   //----------------------------------------------------------------------------------------------------------
   const callBackForceOpenProposal = 
     (tx: AlchemyLogTransaction) => {
-      const address = tx.address
-      sendNotificationsToDiscordChannel(address, 'ForceOpenProposal')
+      
+      sendNotificationsToDiscordChannel(FORCE_OPEN_PROPOSAL, tx)
   }
 
-  log.logger.info(`Subscription to event log for address ${factoryAddress} and event TimekeeperEnableProposal`)
+  //TEST 
+  await getTransactionInfos('0x345d6797a6ee7e9332e2d320b7a60369f61d7cd32fde067ccd6253f4e702a77d')
+
+  log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${TIME_KEEPER_ENABLE_PROPOSAL}`)
   //TimekeeperEnableProposal Subscription
   alchemy.ws.on(
       filterTimekeeperEnableProposal,
       callBackTimekeeperEnableProposal
   );
 
-  log.logger.info(`Subscription to event log for address ${factoryAddress} and event TimekeeperProposal`)
+  log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${TIME_KEEPER_PROPOSAL}`)
   //TimekeeperProposal Subscription
   alchemy.ws.on(
     filterTimekeeperProposal,
     callBackTimekeeperProposal
   );
 
-  log.logger.info(`Subscription to event log for address ${factoryAddress} and event ForceOpenProposal`)
+  log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${FORCE_OPEN_PROPOSAL}`)
   //ForceOpenProposal Subscription
   alchemy.ws.on(
     filterForceOpenProposal,

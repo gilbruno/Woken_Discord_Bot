@@ -11,7 +11,8 @@ declare global {
             ALCHEMY_API_KEY: string,
             FACTORY_ADDRESS: string,
             PORT: number,
-            NETWORK: networkType
+            NETWORK: networkType,
+            PRIVATE_KEY: string
         }
     }
 }

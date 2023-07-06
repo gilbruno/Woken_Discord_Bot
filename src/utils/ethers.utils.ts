@@ -25,6 +25,14 @@ export function getSignature(eventName: string, inputs: any[]) {
 }
 
 //----------------------------------------------------------------------------------------------------------
+export function getAbi(contractName: string) {
+    const rootDir = process.cwd()
+    const abiPath = path.join(rootDir, `/.abi/${contractName}.json`);
+    const abi = require(abiPath)
+    return abi
+} 
+
+//----------------------------------------------------------------------------------------------------------
 export function getAbiEvents()
     {
         const rootDir = process.cwd()
