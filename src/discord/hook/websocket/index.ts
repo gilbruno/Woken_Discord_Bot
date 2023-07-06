@@ -2,15 +2,27 @@ import { Network, Alchemy, AlchemySubscription } from 'alchemy-sdk';
 import { getKeccacByEventName } from '../../../utils/ethers.utils';
 import { Log } from '../../../logger/log';
 import { WokenHook } from '../woken.hook';
-import { AlchemyLogTransaction } from './types';
+import { AlchemyLogTransaction, network, networkSchema, networkType } from './types';
+import { joinString } from '../../../utils/utils';
 
 export async function alchemy_websocket(): Promise<void> {
 
   const log = new Log()
-  const apiKey = process.env.ALCHEMY_API_KEY
+  const apiKey         = process.env.ALCHEMY_API_KEY
   const factoryAddress = process.env.FACTORY_ADDRESS
+  let networkSet: networkType = process.env.NETWORK 
   
-  
+  const network = {
+    type: networkSet
+  }
+
+  const errorNetwork = await isNetworkValid(network)
+
+  if (errorNetwork) {
+    log.logger.error(errorNetwork)
+    process.exit(1)
+  }
+
   const settings = {
     apiKey: apiKey, // Replace with your Alchemy API Key.
     network: Network.ETH_GOERLI, // Replace with your network.
@@ -87,3 +99,17 @@ export async function alchemy_websocket(): Promise<void> {
   );
 
 }  
+
+async function isNetworkValid(network: network) {
+  let errorMsg = ''
+  let parsedObj = null
+  try {
+      parsedObj = networkSchema.parse(network);
+    } catch (error: any) {
+      errorMsg = 'Invalid Network set ! '  
+      errorMsg += error.issues[0].message
+    }
+    finally {
+      return errorMsg
+    }
+}
