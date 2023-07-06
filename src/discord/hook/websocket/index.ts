@@ -141,7 +141,6 @@ export async function alchemy_websocket(): Promise<void> {
     async (tx: AlchemyLogTransaction) => {
       const address = tx.address
       log.logger.info(JSON.stringify(tx))
-      const tokensPair = await getTokensPair('0x948055835585078489BaDc7AB3543aA73445180e')
       sendNotificationsToDiscordChannel(TIME_KEEPER_ENABLE_PROPOSAL, tx)
     }
 
