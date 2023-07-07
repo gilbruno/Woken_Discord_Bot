@@ -15,7 +15,7 @@
     "start:event": "npm run start -- --app=event",
     "test": "echo \"Error: no test specified\" && exit 1",
     "pm2:start:hook": "pm2 start dist/index.js --name woken-bot -- --app=hook",
-    "pm2:start:ws": "pm2 start dist/index.js --name woken-bot-websocket -- --app=ws"
+    "pm2:start:ws": "pm2 start dist/index.js --name woken-bot-websocket -- --app=websocket"
   },
   "keywords": [],
   "author": "",
