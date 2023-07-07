@@ -66,7 +66,6 @@ export async function alchemy_websocket(): Promise<void> {
 
     if (eventName === 'TimekeeperEnableProposal') {
       addressPair = Utils.hexValue(txInfos.logs[0].topics[1])
-      tokensPair  = await getTokensPair(addressPair)
       value       = Utils.hexValue(txInfos.logs[0].data)
       pairAdmin   = await getPairAdmin(addressPair)
     } 
@@ -74,7 +73,7 @@ export async function alchemy_websocket(): Promise<void> {
     let msgNotification = `Hey Woken DexAdmin ! \n`
     
     msgNotification += `An event ${eventName} was emitted by signer address ${signerTx} \n`
-    msgNotification += `  ==> Pair : ${tokensPair} \n`
+    msgNotification += `  ==> Pair : ${addressPair} \n`
     msgNotification += `  ==> Value : ${value} \n`
     msgNotification += `  ==> DexAdmin :  ${pairAdmin}\n`
     msgNotification += `------------------------------------`
