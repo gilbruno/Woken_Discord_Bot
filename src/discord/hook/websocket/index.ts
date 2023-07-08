@@ -9,7 +9,7 @@ export async function alchemy_websocket(): Promise<void> {
   const log = new Log()
   const apiKey         = process.env.ALCHEMY_API_KEY
   const factoryAddress = process.env.FACTORY_ADDRESS
-  const privateKey     = process.env.PRIVATE_KEY
+  //const privateKey     = process.env.PRIVATE_KEY
   let networkSet: networkType = process.env.NETWORK 
   
   const TIME_KEEPER_ENABLE_PROPOSAL = 'TimekeeperEnableProposal' as const
@@ -35,7 +35,7 @@ export async function alchemy_websocket(): Promise<void> {
   const alchemy = new Alchemy(settings);
   
   const provider = await alchemy.config.getProvider();
-  const signer   = new Wallet(privateKey, provider)
+  //const signer   = new Wallet(privateKey, provider)
 
   const filterTimekeeperEnableProposal = {
     address: factoryAddress,
@@ -71,16 +71,15 @@ export async function alchemy_websocket(): Promise<void> {
     } 
 
     let msgNotification = `Hey Woken DexAdmin ! \n`
-    
     msgNotification += `An event ${eventName} was emitted by signer address ${signerTx} \n`
     msgNotification += `  ==> Pair : ${addressPair} \n`
     msgNotification += `  ==> Value : ${value} \n`
-    msgNotification += `  ==> DexAdmin :  ${pairAdmin}\n`
+    msgNotification += `  ==> PairAdmin :  ${pairAdmin}\n`
     msgNotification += `------------------------------------`
 
-    console.log(msgNotification)
+    log.logger.info(msgNotification)
     wokenHook.setMsgNotification(msgNotification)
-    wokenHook.sendNotification()
+    // wokenHook.sendNotification()
   }
 
 
@@ -88,9 +87,8 @@ export async function alchemy_websocket(): Promise<void> {
   const getPairAdmin = async (addressPair: string) => {
     const factoryAbi = getAbi('UniswapV2Factory')
     // Load the contract
-    const factoryContract = new Contract(factoryAddress, factoryAbi, signer);
+    const factoryContract = new Contract(factoryAddress, factoryAbi, provider);
     const pairAdmin = await factoryContract.pairAdmin(addressPair)
-    log.logger.info(`PAIR ADMIN : ${pairAdmin}`)
     return pairAdmin
   }
 
@@ -100,10 +98,7 @@ export async function alchemy_websocket(): Promise<void> {
     let txInfos = await alchemy.core.getTransactionReceipt(txHash)
     const txInfosLogs = txInfos.logs[0]
     //Logging the response to the console
-    log.logger.info(JSON.stringify(txInfos, null, 2))
-
     return txInfos
-
   }
 
   //----------------------------------------------------------------------------------------------------------
@@ -119,8 +114,7 @@ export async function alchemy_websocket(): Promise<void> {
       }
       )
     //Logging the response to the console
-    log.logger.info(JSON.stringify(logs, null, 2))
-
+    //log.logger.info(JSON.stringify(logs, null, 2))
     return logs
 
   }
@@ -129,7 +123,7 @@ export async function alchemy_websocket(): Promise<void> {
   const getTokensPair = async(addressPair: string) => {
       const factoryAbi = getAbi('UniswapV2Factory')
       // Load the contract
-      const factoryContract = new Contract(factoryAddress, factoryAbi, signer);
+      const factoryContract = new Contract(factoryAddress, factoryAbi);
       const pair = await factoryContract.getTokens(addressPair)
       log.logger.info(`PAIR : ${pair}`)
       return pair
@@ -179,6 +173,7 @@ export async function alchemy_websocket(): Promise<void> {
   subscribeToEvent(FORCE_OPEN_PROPOSAL, callBackForceOpenProposal)
 
 }  
+
 
 async function isNetworkValid(network: network) {
   let errorMsg = ''

@@ -11,6 +11,7 @@
     "start": "node dist/index.js",
     "start:bot": "npm run start -- --app=bot",
     "start:hook": "npm run start -- --app=hook",
+    "start:hook:test": "npm run start -- --app=test_hook",
     "start:ws": "npm run start -- --app=websocket",
     "start:event": "npm run start -- --app=event",
     "test": "echo \"Error: no test specified\" && exit 1",

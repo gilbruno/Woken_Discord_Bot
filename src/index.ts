@@ -3,7 +3,7 @@ import { WokenBot } from "./discord/bot/woken.bot";
 import { alchemy_notify } from "./discord/hook/alchemy_notify";
 import { Inquirer } from "./inquirer/inquirer";
 import { alchemy_websocket } from "./discord/hook/websocket";
-
+import { test } from "./discord/hook/test";
 
 dotenv.config()
 
@@ -16,7 +16,9 @@ if (argv.app == 'bot') {
 else if (argv.app == 'hook') {
     alchemy_notify()
 }
-
+else if (argv.app == 'test_hook') {
+    test()
+}
 else if (argv.app == 'event') {
     const inquirer = new Inquirer()
     inquirer.run()
