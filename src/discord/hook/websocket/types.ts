@@ -26,7 +26,7 @@ export const networkSchema = z.object(
 
 export type network = z.infer<typeof networkSchema>
 
-export type eventName = 'TimekeeperEnableProposal' | 'TimekeeperProposal' | 'ForceOpenProposal'
+export type eventName = 'TimekeeperEnableProposal' | 'TimekeeperProposal' | 'ForceOpenProposal' | 'PairCreated'
 
 
 
