@@ -101,11 +101,6 @@ export async function alchemy_websocket(): Promise<void> {
   }
 
   //----------------------------------------------------------------------------------------------------------
-  const buildNotificationTExt = (eventName: string) => {
-    const template = require(``)
-  }
-
-  //----------------------------------------------------------------------------------------------------------
   const sendNotificationsToDiscordChannel = async (eventName: eventName, tx: AlchemyLogTransaction) => {
     const txHash    = tx.transactionHash
     const blockHash = tx.blockHash
@@ -118,17 +113,26 @@ export async function alchemy_websocket(): Promise<void> {
 
     let replacements: any = {} 
 
-    if (eventName === 'TimekeeperEnableProposal') {
+    if (eventName === TIME_KEEPER_ENABLE_PROPOSAL) {
       pairAddress = Utils.hexValue(logs[0].topics[1])
       pairAdmin   = await getPairAdmin(pairAddress)
       value       = parseInt(logs[0].data, 16)
       replacements.value = (value===1)?'true':'false'
-    } else if (eventName === 'PairCreated') {
+    } else if (eventName === PAIR_CREATED) {
       pairAddress = Utils.hexValue(logs[0].topics[1])
       pairAdmin   = await getPairAdmin(pairAddress)
-    } else if (eventName === 'TimekeeperProposal') {
-      pairAddress = Utils.hexValue(logs[0].topics[1])
+    } else if (eventName === TIME_KEEPER_PROPOSAL) {
+      const parsedLog = decodeLogs(CONTRACT_NAME, eventName, logs[0])
+      pairAddress     = parsedLog.args[0]
       pairAdmin   = await getPairAdmin(pairAddress)
+      const timeKeeperPerLp = await getTimeKeeperPerLp(pairAddress)
+      console.log(timeKeeperPerLp)
+      replacements.openingHours = timeKeeperPerLp.openingHour
+      replacements.openingMinutes = timeKeeperPerLp.openingMinute
+      replacements.closingHours = timeKeeperPerLp.closingHour
+      replacements.closingMinutes = timeKeeperPerLp.closingMinute
+      replacements.utcOffset = timeKeeperPerLp.utcOffset
+      replacements.isOnlyDay = timeKeeperPerLp.isOnlyDay
     } else if (eventName === FORCE_OPEN_PROPOSAL) {
       const parsedLog = decodeLogs(CONTRACT_NAME, eventName, logs[0])
       pairAddress = parsedLog.args[0]
@@ -155,11 +159,20 @@ export async function alchemy_websocket(): Promise<void> {
 
   //----------------------------------------------------------------------------------------------------------
   const getPairAdmin = async (addressPair: string) => {
-    const factoryAbi = getAbi('UniswapV2Factory')
+    const factoryAbi = getAbi(CONTRACT_NAME)
     // Load the contract
     const factoryContract = new Contract(factoryAddress, factoryAbi, provider);
     const pairAdmin = await factoryContract.pairAdmin(addressPair)
     return pairAdmin
+  }
+
+  //----------------------------------------------------------------------------------------------------------
+  const getTimeKeeperPerLp = async (addressPair: string) => {
+    const factoryAbi = getAbi(CONTRACT_NAME)
+    // Load the contract
+    const factoryContract = new Contract(factoryAddress, factoryAbi, provider);
+    const timeKeeperPerLp = await factoryContract.TimekeeperPerLp(addressPair)
+    return timeKeeperPerLp
   }
 
   //----------------------------------------------------------------------------------------------------------
@@ -221,7 +234,6 @@ export async function alchemy_websocket(): Promise<void> {
 
   //const abiEvents = getAbiEvents('UniswapV2Factory')
   //const signature = getSignatureEvent(CONTRACT_NAME, 'PairCreated')
-  const abiEvent = getAbiEvent('UniswapV2Factory', 'PairCreated')
 
   //PairCreated Subscription
   log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${PAIR_CREATED}`)
