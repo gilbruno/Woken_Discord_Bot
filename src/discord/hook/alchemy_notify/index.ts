@@ -8,6 +8,8 @@ export async function alchemy_notify(): Promise<void> {
   
     const port = `${process.env.PORT}`;
     
+    const CONTRACT_NAME = 'UniswapV2Factory'
+
     // Parse the request body as JSON
     app.use(bodyParser.json());
     
@@ -18,7 +20,7 @@ export async function alchemy_notify(): Promise<void> {
       if (logs.length === 0) {
         console.log("Empty logs array received, skipping");
       } else {
-        const mappingKeccacEvents = getMappingKeccacEventName()
+        const mappingKeccacEvents = getMappingKeccacEventName(CONTRACT_NAME)
         const wokenHook = new WokenHook()
         for (let i = 0; i < logs.length; i++) {
           const topicEventName = logs[i].topics[0]
@@ -43,7 +45,7 @@ export async function alchemy_notify(): Promise<void> {
 
     // Keccac Event Pages
     app.get("/keccac_event", (req, res) => {
-      const keccacEvents = getMappingEventNameKeccac()
+      const keccacEvents = getMappingEventNameKeccac(CONTRACT_NAME)
       const response = JSON.stringify(keccacEvents, null, 2)
       res.send(response)
     });

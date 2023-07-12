@@ -1,5 +1,5 @@
 import { Network, Alchemy, Utils, Wallet, Contract } from 'alchemy-sdk';
-import { getAbi, getKeccacByEventName } from '../../../utils/ethers.utils';
+import { decodeLogs, getAbi, getAbiEvent, getAbiEvents, getKeccacByEventName, getSignatureEvent, getSigner, getTransactionInfos } from '../../../utils/ethers.utils';
 import { Log } from '../../../logger/log';
 import { WokenHook } from '../woken.hook';
 import { AlchemyLogTransaction, eventName, network, networkSchema, networkType } from './types';
@@ -18,7 +18,8 @@ export async function alchemy_websocket(): Promise<void> {
   const TIME_KEEPER_PROPOSAL        = 'TimekeeperProposal' as const
   const FORCE_OPEN_PROPOSAL         = 'ForceOpenProposal' as const
   const PAIR_CREATED                = 'PairCreated' as const
-  
+  const CONTRACT_NAME               = 'UniswapV2Factory' as const 
+
   const network = {
     type: networkSet
   }
@@ -84,19 +85,19 @@ export async function alchemy_websocket(): Promise<void> {
   //----------------------------------------------------------------------------------------------------------
   const filterTimekeeperEnableProposal = {
     address: factoryAddress,
-    topics: [getKeccacByEventName(TIME_KEEPER_ENABLE_PROPOSAL)]
+    topics: [getKeccacByEventName(CONTRACT_NAME, TIME_KEEPER_ENABLE_PROPOSAL)]
   }
   
   //----------------------------------------------------------------------------------------------------------
   const filterTimekeeperProposal = {
     address: factoryAddress,
-    topics: [getKeccacByEventName(TIME_KEEPER_PROPOSAL)]
+    topics: [getKeccacByEventName(CONTRACT_NAME, TIME_KEEPER_PROPOSAL)]
   }
 
   //----------------------------------------------------------------------------------------------------------
   const filterForceOpenProposal = {
     address: factoryAddress,
-    topics: [getKeccacByEventName(FORCE_OPEN_PROPOSAL)]
+    topics: [getKeccacByEventName(CONTRACT_NAME, FORCE_OPEN_PROPOSAL)]
   }
 
   //----------------------------------------------------------------------------------------------------------
@@ -106,22 +107,36 @@ export async function alchemy_websocket(): Promise<void> {
 
   //----------------------------------------------------------------------------------------------------------
   const sendNotificationsToDiscordChannel = async (eventName: eventName, tx: AlchemyLogTransaction) => {
-    const txHash   = tx.transactionHash
-    const txInfos  = await getTransactionInfos(txHash)
-    const signerTx = txInfos.from
+    const txHash    = tx.transactionHash
+    const blockHash = tx.blockHash
+    const logs      = await getLogs(blockHash, eventName)
+    const signerTx  = await getSigner(await getTransactionInfos(alchemy, txHash))
+
     let pairAddress: string
-    let tokensPair: string
-    let value: number
+    let value: number | string
     let pairAdmin: string
 
     let replacements: any = {} 
 
     if (eventName === 'TimekeeperEnableProposal') {
-      pairAddress = Utils.hexValue(txInfos.logs[0].topics[1])
-      value       = parseInt(txInfos.logs[0].data, 16)
+      pairAddress = Utils.hexValue(logs[0].topics[1])
       pairAdmin   = await getPairAdmin(pairAddress)
+      value       = parseInt(logs[0].data, 16)
       replacements.value = (value===1)?'true':'false'
-    } 
+    } else if (eventName === 'PairCreated') {
+      pairAddress = Utils.hexValue(logs[0].topics[1])
+      pairAdmin   = await getPairAdmin(pairAddress)
+    } else if (eventName === 'TimekeeperProposal') {
+      pairAddress = Utils.hexValue(logs[0].topics[1])
+      pairAdmin   = await getPairAdmin(pairAddress)
+    } else if (eventName === FORCE_OPEN_PROPOSAL) {
+      const parsedLog = decodeLogs(CONTRACT_NAME, eventName, logs[0])
+      pairAddress = parsedLog.args[0]
+      pairAdmin   = await getPairAdmin(pairAddress)
+      value       = parsedLog.args[1]
+      //console.log(parsedLog)
+      replacements.value = value
+    }
 
     replacements = {...replacements, ...{
         signer: signerTx,
@@ -148,26 +163,29 @@ export async function alchemy_websocket(): Promise<void> {
   }
 
   //----------------------------------------------------------------------------------------------------------
-  const getTransactionInfos = async(txHash: string) => {
+  const getLogs = async(blockHash: string, eventName?: string, blockNumber?: number) => {
     //Call the method to return array of logs
-    let txInfos = await alchemy.core.getTransactionReceipt(txHash)
-    const txInfosLogs = txInfos.logs[0]
-    //Logging the response to the console
-    return txInfos
-  }
+    let logs = await alchemy.core.getLogs({blockHash})
 
-  //----------------------------------------------------------------------------------------------------------
-  const getLogs = async(blockHash: string, eventName: string, blockNumber: number) => {
-    //Call the method to return array of logs
-    let response = await alchemy.core.getLogs({blockHash})
-
-    //Filter response by blockNumber 
-    const logs = response.filter(
-      (response_elt: any) => {
-        return (response_elt.blockNumber === blockNumber 
-          && response_elt.topics[0] == getKeccacByEventName(eventName))
-      }
-      )
+    //Filter response by blockNumber if exists
+    if (eventName !== undefined) {
+      logs = logs.filter(
+        (response_elt: any) => {
+          return (response_elt.topics[0] == getKeccacByEventName(CONTRACT_NAME, eventName))
+        }
+      )  
+      return logs
+    }
+    
+    //Filter response by blockNumber if exists
+    if (blockNumber !== undefined) {
+      logs = logs.filter(
+        (response_elt: any) => {
+          return (response_elt.blockNumber === blockNumber)
+        }
+      )  
+      return logs
+    }
     //Logging the response to the console
     //log.logger.info(JSON.stringify(logs, null, 2))
     return logs
@@ -191,7 +209,7 @@ export async function alchemy_websocket(): Promise<void> {
   const subscribeToEvent = (eventName: eventName, callBack: (tx: AlchemyLogTransaction) => void) => {
       const filter = {
           address: factoryAddress,
-          topics: [getKeccacByEventName(eventName)]
+          topics: [getKeccacByEventName(CONTRACT_NAME, eventName)]
       }
       alchemy.ws.on(filter, callBack);
   }
@@ -200,6 +218,10 @@ export async function alchemy_websocket(): Promise<void> {
   //   log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${event}`)
   //   subscribeToEvent(TIME_KEEPER_PROPOSAL, events[event])  
   // }
+
+  //const abiEvents = getAbiEvents('UniswapV2Factory')
+  //const signature = getSignatureEvent(CONTRACT_NAME, 'PairCreated')
+  const abiEvent = getAbiEvent('UniswapV2Factory', 'PairCreated')
 
   //PairCreated Subscription
   log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${PAIR_CREATED}`)

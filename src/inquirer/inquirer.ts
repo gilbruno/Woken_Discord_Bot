@@ -8,6 +8,8 @@ export class Inquirer {
 
     public answers : Answer
     
+    private readonly CONTRACT_NAME = 'UniswapV2Factory'
+
     //----------------------------------------------------------------------------------------------------------
     private async buildQuestions() {
         const suggestedQuestions = []
@@ -21,7 +23,7 @@ export class Inquirer {
     private async handleAnswers() 
     {
         if (this.answers.helpAction === HELP_ACTION_GET_KECCAC_EVENT_NAME) {
-            const abiEvents = getAbiEvents()
+            const abiEvents = getAbiEvents(this.CONTRACT_NAME)
 
             const eventName = this.answers.eventName
 
@@ -43,7 +45,7 @@ export class Inquirer {
         }
         else if (this.answers.helpAction === HELP_ACTION_GET_KECCAC_ALL_EVENTS_NAME) {
             console.log('Mapping Event Name <===> Keccac : ')
-            console.log(getMappingEventNameKeccac())
+            console.log(getMappingEventNameKeccac(this.CONTRACT_NAME))
             console.log('---------------')
             //console.log(getMappingKeccacEventName())
         }
