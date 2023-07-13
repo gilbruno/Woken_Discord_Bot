@@ -3,9 +3,9 @@ import { Template } from "./types";
 export const templates: Template = {
     'ForceOpenProposal': `
 Hey Woken Team ! 
-A new event awaiting approval was emitted by signer address {{signer}}      
+A new event awaiting approval was emitted by signer address **{{signer}}**      
 
-Event : :rotating_light: ForceOpenProposal 
+Event : :rotating_light: *ForceOpenProposal*
 Pair : {{pairAddress}}
 Bool : {{value}}
 
@@ -14,9 +14,9 @@ PairAdmin : {{pairAdmin}}
         `,
     'TimekeeperProposal': `
 Hey Woken Team !
-A new event awaiting approval was emitted by signer address {{signer}}
+A new event awaiting approval was emitted by signer address **{{signer}}**
 
-Event : :clock3: TimekeeperProposal 
+Event : :clock3: *TimekeeperProposal* 
 Pair : {{pairAddress}}
 DaysOpenLP: {{daysOpen}}
 OpeningHours: {{openingHours}}
@@ -31,9 +31,9 @@ PairAdmin : {{pairAdmin}}
     `,
     'TimekeeperEnableProposal': `
 Hey Woken Team !
-A new event awaiting approval was emitted by signer address {{signer}}
+A new event awaiting approval was emitted by signer address **{{signer}}**
         
-Event : :gear: TimekeeperEnableProposal 
+Event : :gear: *TimekeeperEnableProposal*
 Pair : {{pairAddress}}
 Bool : {{value}}
      
@@ -42,9 +42,9 @@ PairAdmin : {{pairAdmin}}
     `,
     'PairCreated': `
 Hey Woken Team ! 
-A new event was emitted by signer address {{signer}}
+A new event was emitted by signer address **{{signer}}**
 
-Event : :fire: PairCreated 
+Event : :fire: *PairCreated*
 Pair : {{pairAddress}}
 
 PairAdmin : {{pairAdmin}}

@@ -2,7 +2,7 @@ import { Network, Alchemy, Utils, Wallet, Contract } from 'alchemy-sdk';
 import { decodeLogs, getAbi, getKeccacByEventName, getSigner, getTransactionInfos } from '../../../utils/ethers.utils';
 import { Log } from '../../../logger/log';
 import { WokenHook } from '../woken.hook';
-import { AlchemyLogTransaction, eventName, network, networkSchema, networkType } from './types';
+import { AlchemyLogTransaction, eventName, network, networkSchema, networkType, replacementsTemplate } from './types';
 import { buildNotificationText } from '../../../utils/utils';
 import { templates } from '../../../templates/template';
 
@@ -109,29 +109,28 @@ export async function alchemy_websocket(): Promise<void> {
     let value: number | string
     let pairAdmin: string
 
-    let replacements: any = {} 
+    let replacements: replacementsTemplate = {} 
     
     const parsedLog = decodeLogs(CONTRACT_NAME, eventName, logs[0])
     pairAddress = parsedLog.args[0]
     pairAdmin   = await getPairAdmin(pairAddress)
 
-    if (eventName === TIME_KEEPER_ENABLE_PROPOSAL) {
-      value       = parseInt(logs[0].data, 16)
-      replacements.value = (value===1)?'true':'false'
+    if (eventName === TIME_KEEPER_ENABLE_PROPOSAL || eventName === FORCE_OPEN_PROPOSAL) {
+      value              = parsedLog.args[1]
+      replacements.value = value
     } else if (eventName === PAIR_CREATED) {
       //Do nothing
     } else if (eventName === TIME_KEEPER_PROPOSAL) {
       const timeKeeperPerLp = await getTimeKeeperPerLp(pairAddress)
+      const daysOpenLP      = await getDaysOpenLP(pairAddress)
       replacements.openingHours   = timeKeeperPerLp.openingHour
       replacements.openingMinutes = timeKeeperPerLp.openingMinute
       replacements.closingHours   = timeKeeperPerLp.closingHour
       replacements.closingMinutes = timeKeeperPerLp.closingMinute
       replacements.utcOffset      = timeKeeperPerLp.utcOffset
       replacements.isOnlyDay      = timeKeeperPerLp.isOnlyDay
-    } else if (eventName === FORCE_OPEN_PROPOSAL) {
-      value       = parsedLog.args[1]
-      replacements.value = value
-    }
+      replacements.daysOpen       = daysOpenLP
+    } 
 
     replacements = {...replacements, ...{
         signer: signerTx,
@@ -147,22 +146,29 @@ export async function alchemy_websocket(): Promise<void> {
     wokenHook.sendNotification()
   }
 
+  //----------------------------------------------------------------------------------------------------------
+  const getContractInstance = () => {
+    const factoryAbi = getAbi(CONTRACT_NAME)
+    // Load the contract
+    const contract = new Contract(factoryAddress, factoryAbi, provider);
+    return contract
+  }
 
   //----------------------------------------------------------------------------------------------------------
   const getPairAdmin = async (addressPair: string) => {
-    const factoryAbi = getAbi(CONTRACT_NAME)
-    // Load the contract
-    const factoryContract = new Contract(factoryAddress, factoryAbi, provider);
-    const pairAdmin = await factoryContract.pairAdmin(addressPair)
+    const pairAdmin = await getContractInstance().pairAdmin(addressPair)
     return pairAdmin
   }
 
   //----------------------------------------------------------------------------------------------------------
+  const getDaysOpenLP = async (addressPair: string) => {
+    const daysOpenLP = await getContractInstance().getDaysOpenLP(addressPair)
+    return daysOpenLP
+  }
+
+  //----------------------------------------------------------------------------------------------------------
   const getTimeKeeperPerLp = async (addressPair: string) => {
-    const factoryAbi = getAbi(CONTRACT_NAME)
-    // Load the contract
-    const factoryContract = new Contract(factoryAddress, factoryAbi, provider);
-    const timeKeeperPerLp = await factoryContract.TimekeeperPerLp(addressPair)
+    const timeKeeperPerLp = await getContractInstance().TimekeeperPerLp(addressPair)
     return timeKeeperPerLp
   }
 

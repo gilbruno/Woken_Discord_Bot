@@ -28,5 +28,17 @@ export type network = z.infer<typeof networkSchema>
 
 export type eventName = 'TimekeeperEnableProposal' | 'TimekeeperProposal' | 'ForceOpenProposal' | 'PairCreated'
 
+export type replacementsTemplate = {
+    pairAdmin?: string,
+    pairAddress?: string,
+    value?: number | string,
+    daysOpen?: string,
+    openingHours?: string,
+    openingMinutes?: string,
+    closingHours?: string,
+    closingMinutes?: string,
+    utcOffset?: string,
+    isOnlyDay?: string
 
+}
 
