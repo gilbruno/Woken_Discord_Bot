@@ -202,9 +202,6 @@ export async function alchemy_websocket(): Promise<void> {
 
   }
 
-  //TEST 
-  //await getTransactionInfos('0x345d6797a6ee7e9332e2d320b7a60369f61d7cd32fde067ccd6253f4e702a77d')
-
   const subscribeToEvent = (eventName: eventName, callBack: (tx: AlchemyLogTransaction) => void) => {
       const filter = {
           address: factoryAddress,
@@ -213,13 +210,11 @@ export async function alchemy_websocket(): Promise<void> {
       alchemy.ws.on(filter, callBack);
   }
 
+  //TODO : Make the loop work
   // for (const event in events) {
   //   log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${event}`)
   //   subscribeToEvent(TIME_KEEPER_PROPOSAL, events[event])  
   // }
-
-  //const abiEvents = getAbiEvents('UniswapV2Factory')
-  //const signature = getSignatureEvent(CONTRACT_NAME, 'PairCreated')
 
   //PairCreated Subscription
   log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${PAIR_CREATED}`)
