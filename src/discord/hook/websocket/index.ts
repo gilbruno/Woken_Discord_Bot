@@ -1,5 +1,5 @@
 import { Network, Alchemy, Utils, Wallet, Contract } from 'alchemy-sdk';
-import { decodeLogs, getAbi, getAbiEvent, getAbiEvents, getKeccacByEventName, getSignatureEvent, getSigner, getTransactionInfos } from '../../../utils/ethers.utils';
+import { decodeLogs, getAbi, getKeccacByEventName, getSigner, getTransactionInfos } from '../../../utils/ethers.utils';
 import { Log } from '../../../logger/log';
 import { WokenHook } from '../woken.hook';
 import { AlchemyLogTransaction, eventName, network, networkSchema, networkType } from './types';
@@ -43,13 +43,13 @@ export async function alchemy_websocket(): Promise<void> {
 
   const wokenHook = new WokenHook()
 
-    //----------------------------------------------------------------------------------------------------------
-    const callBackTimekeeperEnableProposal = 
-      async (tx: AlchemyLogTransaction) => {
-        const address = tx.address
-        log.logger.info(JSON.stringify(tx))
-        sendNotificationsToDiscordChannel(TIME_KEEPER_ENABLE_PROPOSAL, tx)
-    }
+  //----------------------------------------------------------------------------------------------------------
+  const callBackTimekeeperEnableProposal = 
+    async (tx: AlchemyLogTransaction) => {
+      const address = tx.address
+      log.logger.info(JSON.stringify(tx))
+      sendNotificationsToDiscordChannel(TIME_KEEPER_ENABLE_PROPOSAL, tx)
+  }
 
   //----------------------------------------------------------------------------------------------------------
   const callBackTimekeeperProposal = 
@@ -79,8 +79,6 @@ export async function alchemy_websocket(): Promise<void> {
     FORCE_OPEN_PROPOSAL: callBackForceOpenProposal,
     PAIR_CREATED: callBackPairCreated
   }
-
-  const eventsList = {...events}
 
   //----------------------------------------------------------------------------------------------------------
   const filterTimekeeperEnableProposal = {
@@ -112,33 +110,26 @@ export async function alchemy_websocket(): Promise<void> {
     let pairAdmin: string
 
     let replacements: any = {} 
+    
+    const parsedLog = decodeLogs(CONTRACT_NAME, eventName, logs[0])
+    pairAddress = parsedLog.args[0]
+    pairAdmin   = await getPairAdmin(pairAddress)
 
     if (eventName === TIME_KEEPER_ENABLE_PROPOSAL) {
-      pairAddress = Utils.hexValue(logs[0].topics[1])
-      pairAdmin   = await getPairAdmin(pairAddress)
       value       = parseInt(logs[0].data, 16)
       replacements.value = (value===1)?'true':'false'
     } else if (eventName === PAIR_CREATED) {
-      pairAddress = Utils.hexValue(logs[0].topics[1])
-      pairAdmin   = await getPairAdmin(pairAddress)
+      //Do nothing
     } else if (eventName === TIME_KEEPER_PROPOSAL) {
-      const parsedLog = decodeLogs(CONTRACT_NAME, eventName, logs[0])
-      pairAddress     = parsedLog.args[0]
-      pairAdmin   = await getPairAdmin(pairAddress)
       const timeKeeperPerLp = await getTimeKeeperPerLp(pairAddress)
-      console.log(timeKeeperPerLp)
-      replacements.openingHours = timeKeeperPerLp.openingHour
+      replacements.openingHours   = timeKeeperPerLp.openingHour
       replacements.openingMinutes = timeKeeperPerLp.openingMinute
-      replacements.closingHours = timeKeeperPerLp.closingHour
+      replacements.closingHours   = timeKeeperPerLp.closingHour
       replacements.closingMinutes = timeKeeperPerLp.closingMinute
-      replacements.utcOffset = timeKeeperPerLp.utcOffset
-      replacements.isOnlyDay = timeKeeperPerLp.isOnlyDay
+      replacements.utcOffset      = timeKeeperPerLp.utcOffset
+      replacements.isOnlyDay      = timeKeeperPerLp.isOnlyDay
     } else if (eventName === FORCE_OPEN_PROPOSAL) {
-      const parsedLog = decodeLogs(CONTRACT_NAME, eventName, logs[0])
-      pairAddress = parsedLog.args[0]
-      pairAdmin   = await getPairAdmin(pairAddress)
       value       = parsedLog.args[1]
-      //console.log(parsedLog)
       replacements.value = value
     }
 
@@ -204,17 +195,6 @@ export async function alchemy_websocket(): Promise<void> {
     return logs
 
   }
-
-  //----------------------------------------------------------------------------------------------------------
-  const getTokensPair = async(addressPair: string) => {
-      const factoryAbi = getAbi('UniswapV2Factory')
-      // Load the contract
-      const factoryContract = new Contract(factoryAddress, factoryAbi);
-      const pair = await factoryContract.getTokens(addressPair)
-      log.logger.info(`PAIR : ${pair}`)
-      return pair
-  }
-
 
   //TEST 
   //await getTransactionInfos('0x345d6797a6ee7e9332e2d320b7a60369f61d7cd32fde067ccd6253f4e702a77d')
