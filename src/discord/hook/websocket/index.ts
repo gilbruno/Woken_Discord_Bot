@@ -33,8 +33,8 @@ export async function alchemy_websocket(): Promise<void> {
   }
 
   const settings = {
-    apiKey: apiKey, // Replace with your Alchemy API Key.
-    network: Network.ETH_GOERLI, // Replace with your network.
+    apiKey: apiKey, 
+    network: networkSet
   };
   
   const alchemy = new Alchemy(settings);
