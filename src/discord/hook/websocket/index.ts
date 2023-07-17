@@ -78,24 +78,6 @@ export async function alchemy_websocket(): Promise<void> {
   }
 
   //----------------------------------------------------------------------------------------------------------
-  const filterTimekeeperEnableProposal = {
-    address: factoryAddress,
-    topics: [getKeccacByEventName(CONTRACT_NAME, TIME_KEEPER_ENABLE_PROPOSAL)]
-  }
-  
-  //----------------------------------------------------------------------------------------------------------
-  const filterTimekeeperProposal = {
-    address: factoryAddress,
-    topics: [getKeccacByEventName(CONTRACT_NAME, TIME_KEEPER_PROPOSAL)]
-  }
-
-  //----------------------------------------------------------------------------------------------------------
-  const filterForceOpenProposal = {
-    address: factoryAddress,
-    topics: [getKeccacByEventName(CONTRACT_NAME, FORCE_OPEN_PROPOSAL)]
-  }
-
-  //----------------------------------------------------------------------------------------------------------
   const sendNotificationsToDiscordChannel = async (eventName: eventName, tx: AlchemyLogTransaction) => {
     const txHash    = tx.transactionHash
     const blockHash = tx.blockHash
