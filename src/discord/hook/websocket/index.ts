@@ -140,7 +140,7 @@ export async function alchemy_websocket(): Promise<void> {
 
     log.logger.info(msgNotification)
     wokenHook.setMsgNotification(msgNotification)
-    // wokenHook.sendNotification()
+    wokenHook.sendNotification()
   }
 
   const subscribeToEvent = (eventName: eventName|string, callBack: (tx: AlchemyLogTransaction) => void) => {
