@@ -42,3 +42,4 @@ export type replacementsTemplate = {
 
 }
 
+export type callbackWebSocket = (tx: AlchemyLogTransaction) => Promise<void>

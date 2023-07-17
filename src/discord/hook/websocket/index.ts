@@ -1,10 +1,11 @@
-import { Network, Alchemy, Utils, Wallet, Contract } from 'alchemy-sdk';
-import { decodeLogs, getAbi, getKeccacByEventName, getSigner, getTransactionInfos } from '../../../utils/ethers.utils';
+import { Network, Alchemy } from 'alchemy-sdk';
+import { decodeLogs, getKeccacByEventName, getLogsByTx, getSigner, getTransactionInfos } from '../../../utils/ethers.utils';
 import { Log } from '../../../logger/log';
 import { WokenHook } from '../woken.hook';
-import { AlchemyLogTransaction, eventName, network, networkSchema, networkType, replacementsTemplate } from './types';
-import { buildNotificationText } from '../../../utils/utils';
+import { AlchemyLogTransaction, callbackWebSocket, eventName, networkType, replacementsTemplate } from './types';
+import { buildNotificationText, isNetworkValid } from '../../../utils/utils';
 import { templates } from '../../../templates/template';
+import SmartContractUtils from '../../../utils/smart.contract.utils';
 
 export async function alchemy_websocket(): Promise<void> {
 
@@ -46,38 +47,34 @@ export async function alchemy_websocket(): Promise<void> {
   //----------------------------------------------------------------------------------------------------------
   const callBackTimekeeperEnableProposal = 
     async (tx: AlchemyLogTransaction) => {
-      const address = tx.address
-      log.logger.info(JSON.stringify(tx))
+      //log.logger.info(JSON.stringify(tx))
       sendNotificationsToDiscordChannel(TIME_KEEPER_ENABLE_PROPOSAL, tx)
   }
 
   //----------------------------------------------------------------------------------------------------------
   const callBackTimekeeperProposal = 
     async (tx: AlchemyLogTransaction) => {
-      const address = tx.address
       sendNotificationsToDiscordChannel(TIME_KEEPER_PROPOSAL, tx)
   }
 
   //----------------------------------------------------------------------------------------------------------
   const callBackForceOpenProposal = 
-    (tx: AlchemyLogTransaction) => {
-      
+    async (tx: AlchemyLogTransaction) => {
       sendNotificationsToDiscordChannel(FORCE_OPEN_PROPOSAL, tx)
   }
 
   //----------------------------------------------------------------------------------------------------------
   const callBackPairCreated = 
-    (tx: AlchemyLogTransaction) => {
-      
+    async (tx: AlchemyLogTransaction) => {
       sendNotificationsToDiscordChannel(PAIR_CREATED, tx)
   }
 
   //List of events to listen with their callback functions
-  const events = {
-    TIME_KEEPER_ENABLE_PROPOSAL : callBackTimekeeperEnableProposal,
-    TIME_KEEPER_PROPOSAL: callBackTimekeeperProposal,
-    FORCE_OPEN_PROPOSAL: callBackForceOpenProposal,
-    PAIR_CREATED: callBackPairCreated
+  const events: Record<eventName, callbackWebSocket> = {
+    'TimekeeperEnableProposal' : callBackTimekeeperEnableProposal,
+    'TimekeeperProposal': callBackTimekeeperProposal,
+    'ForceOpenProposal': callBackForceOpenProposal,
+    'PairCreated': callBackPairCreated
   }
 
   //----------------------------------------------------------------------------------------------------------
@@ -102,7 +99,7 @@ export async function alchemy_websocket(): Promise<void> {
   const sendNotificationsToDiscordChannel = async (eventName: eventName, tx: AlchemyLogTransaction) => {
     const txHash    = tx.transactionHash
     const blockHash = tx.blockHash
-    const logs      = await getLogs(blockHash, eventName)
+    const logs     = await getLogsByTx(alchemy, tx)
     const signerTx  = await getSigner(await getTransactionInfos(alchemy, txHash))
 
     let pairAddress: string
@@ -113,7 +110,7 @@ export async function alchemy_websocket(): Promise<void> {
     
     const parsedLog = decodeLogs(CONTRACT_NAME, eventName, logs[0])
     pairAddress = parsedLog.args[0]
-    pairAdmin   = await getPairAdmin(pairAddress)
+    pairAdmin   = await SmartContractUtils.getPairAdmin(factoryAddress, provider, pairAddress)
 
     if (eventName === TIME_KEEPER_ENABLE_PROPOSAL || eventName === FORCE_OPEN_PROPOSAL) {
       value              = parsedLog.args[1]
@@ -121,8 +118,8 @@ export async function alchemy_websocket(): Promise<void> {
     } else if (eventName === PAIR_CREATED) {
       //Do nothing
     } else if (eventName === TIME_KEEPER_PROPOSAL) {
-      const timeKeeperPerLp = await getTimeKeeperPerLp(pairAddress)
-      const daysOpenLP      = await getDaysOpenLP(pairAddress)
+      const timeKeeperPerLp = await SmartContractUtils.getTimeKeeperPerLp(factoryAddress, provider, pairAddress)
+      const daysOpenLP      = await SmartContractUtils.getDaysOpenLP(factoryAddress, provider, pairAddress)
       replacements.openingHours   = timeKeeperPerLp.openingHour
       replacements.openingMinutes = timeKeeperPerLp.openingMinute
       replacements.closingHours   = timeKeeperPerLp.closingHour
@@ -143,66 +140,10 @@ export async function alchemy_websocket(): Promise<void> {
 
     log.logger.info(msgNotification)
     wokenHook.setMsgNotification(msgNotification)
-    wokenHook.sendNotification()
+    // wokenHook.sendNotification()
   }
 
-  //----------------------------------------------------------------------------------------------------------
-  const getContractInstance = () => {
-    const factoryAbi = getAbi(CONTRACT_NAME)
-    // Load the contract
-    const contract = new Contract(factoryAddress, factoryAbi, provider);
-    return contract
-  }
-
-  //----------------------------------------------------------------------------------------------------------
-  const getPairAdmin = async (addressPair: string) => {
-    const pairAdmin = await getContractInstance().pairAdmin(addressPair)
-    return pairAdmin
-  }
-
-  //----------------------------------------------------------------------------------------------------------
-  const getDaysOpenLP = async (addressPair: string) => {
-    const daysOpenLP = await getContractInstance().getDaysOpenLP(addressPair)
-    return daysOpenLP
-  }
-
-  //----------------------------------------------------------------------------------------------------------
-  const getTimeKeeperPerLp = async (addressPair: string) => {
-    const timeKeeperPerLp = await getContractInstance().TimekeeperPerLp(addressPair)
-    return timeKeeperPerLp
-  }
-
-  //----------------------------------------------------------------------------------------------------------
-  const getLogs = async(blockHash: string, eventName?: string, blockNumber?: number) => {
-    //Call the method to return array of logs
-    let logs = await alchemy.core.getLogs({blockHash})
-
-    //Filter response by blockNumber if exists
-    if (eventName !== undefined) {
-      logs = logs.filter(
-        (response_elt: any) => {
-          return (response_elt.topics[0] == getKeccacByEventName(CONTRACT_NAME, eventName))
-        }
-      )  
-      return logs
-    }
-    
-    //Filter response by blockNumber if exists
-    if (blockNumber !== undefined) {
-      logs = logs.filter(
-        (response_elt: any) => {
-          return (response_elt.blockNumber === blockNumber)
-        }
-      )  
-      return logs
-    }
-    //Logging the response to the console
-    //log.logger.info(JSON.stringify(logs, null, 2))
-    return logs
-
-  }
-
-  const subscribeToEvent = (eventName: eventName, callBack: (tx: AlchemyLogTransaction) => void) => {
+  const subscribeToEvent = (eventName: eventName|string, callBack: (tx: AlchemyLogTransaction) => void) => {
       const filter = {
           address: factoryAddress,
           topics: [getKeccacByEventName(CONTRACT_NAME, eventName)]
@@ -210,38 +151,24 @@ export async function alchemy_websocket(): Promise<void> {
       alchemy.ws.on(filter, callBack);
   }
 
-  //TODO : Make the loop work
-  // for (const event in events) {
-  //   log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${event}`)
-  //   subscribeToEvent(TIME_KEEPER_PROPOSAL, events[event])  
-  // }
+  //Loop through events
+  for (const event in events) {
+    log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${event}`)
+    subscribeToEvent(event, events[event])  
+  }
 
+  //Remarks : It works in a non-loop manner as well like below
   //PairCreated Subscription
-  log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${PAIR_CREATED}`)
-  subscribeToEvent(PAIR_CREATED, callBackPairCreated)
-  //TimekeeperEnableProposal Subscription
-  log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${TIME_KEEPER_ENABLE_PROPOSAL}`)
-  subscribeToEvent(TIME_KEEPER_ENABLE_PROPOSAL, callBackTimekeeperEnableProposal)
-  //TimekeeperProposal Subscription
-  log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${TIME_KEEPER_PROPOSAL}`)
-  subscribeToEvent(TIME_KEEPER_PROPOSAL, callBackTimekeeperProposal)
-  //ForceOpenProposal Subscription
-  log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${FORCE_OPEN_PROPOSAL}`)
-  subscribeToEvent(FORCE_OPEN_PROPOSAL, callBackForceOpenProposal)
+  // log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${PAIR_CREATED}`)
+  // subscribeToEvent(PAIR_CREATED, callBackPairCreated)
+  // //TimekeeperEnableProposal Subscription
+  // log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${TIME_KEEPER_ENABLE_PROPOSAL}`)
+  // subscribeToEvent(TIME_KEEPER_ENABLE_PROPOSAL, callBackTimekeeperEnableProposal)
+  // //TimekeeperProposal Subscription
+  // log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${TIME_KEEPER_PROPOSAL}`)
+  // subscribeToEvent(TIME_KEEPER_PROPOSAL, callBackTimekeeperProposal)
+  // //ForceOpenProposal Subscription
+  // log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${FORCE_OPEN_PROPOSAL}`)
+  // subscribeToEvent(FORCE_OPEN_PROPOSAL, callBackForceOpenProposal)
 
 }  
-
-
-async function isNetworkValid(network: network) {
-  let errorMsg = ''
-  let parsedObj = null
-  try {
-      parsedObj = networkSchema.parse(network);
-    } catch (error: any) {
-      errorMsg = 'Invalid Network set ! '  
-      errorMsg += error.issues[0].message
-    }
-    finally {
-      return errorMsg
-    }
-}

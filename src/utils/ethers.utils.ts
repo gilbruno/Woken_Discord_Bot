@@ -71,10 +71,39 @@ export const getSigner = async(txInfos: TransactionReceipt) => {
 }
 
 //----------------------------------------------------------------------------------------------------------
-export async function getLogs(alchemy: Alchemy, tx: AlchemyLogTransaction, indexLog: number)
+export const getLogs = async(alchemy: Alchemy, contractName: string, blockHash: string, eventName?: string, blockNumber?: number) => {
+    //Call the method to return array of logs
+    let logs = await alchemy.core.getLogs({blockHash})
+
+    //Filter response by blockNumber if exists
+    if (eventName !== undefined) {
+        logs = logs.filter(
+        (response_elt: any) => {
+            return (response_elt.topics[0] == getKeccacByEventName(contractName, eventName))
+        }
+        )  
+        return logs
+    }
+
+    //Filter response by blockNumber if exists
+    if (blockNumber !== undefined) {
+        logs = logs.filter(
+        (response_elt: any) => {
+            return (response_elt.blockNumber === blockNumber)
+        }
+        )  
+        return logs
+    }
+    //Logging the response to the console
+    //log.logger.info(JSON.stringify(logs, null, 2))
+    return logs
+}
+
+//----------------------------------------------------------------------------------------------------------
+export async function getLogsByTx(alchemy: Alchemy, tx: AlchemyLogTransaction, indexLog?: number)
 {
     const txInfos  = await getTransactionInfos(alchemy, tx.transactionHash)
-    return txInfos.logs[indexLog]
+    return (indexLog!==undefined)?txInfos.logs[indexLog]:txInfos.logs
 }
 
 //----------------------------------------------------------------------------------------------------------
