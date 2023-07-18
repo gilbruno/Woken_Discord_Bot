@@ -95,6 +95,13 @@ meaning that your websockets arre listening these events and are ready to send n
 
 ==> TODO later
 
+## Chosen Solution 
+
+We decided to choose the Websocket solution, so this discord notifier app will run with the following comand : 
+
+```
+nm run start:ws
+```
 
 
 # Deploy App on Amazon EC2 
