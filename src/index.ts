@@ -2,13 +2,15 @@ import * as dotenv from "dotenv"
 import { WokenBot } from "./discord/bot/woken.bot";
 import { alchemy_notify } from "./discord/hook/alchemy_notify";
 import { Inquirer } from "./inquirer/inquirer";
-import { AlchemyWebsocket, EventHandler, NotificationSender } from "./discord/hook/websocket/alchemy.websocket";
+import { AlchemyWebsocket } from "./discord/hook/websocket/alchemy.websocket";
 import { test } from "./discord/hook/test";
 import { networkType } from "./discord/hook/websocket/types";
 import { Alchemy } from "alchemy-sdk";
 import { WokenHook } from "./discord/hook/woken.hook";
 import { Log } from "./logger/log";
 import { isNetworkValid } from "./utils/utils";
+import { EventHandler } from "./discord/hook/websocket/event.handler";
+import { NotificationSender } from "./discord/hook/websocket/notification.sender";
 
 dotenv.config()
 
