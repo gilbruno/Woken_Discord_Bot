@@ -26,7 +26,14 @@ export const networkSchema = z.object(
 
 export type network = z.infer<typeof networkSchema>
 
-export type eventName = 'TimekeeperEnableProposal' | 'TimekeeperProposal' | 'ForceOpenProposal' | 'PairCreated'
+//export type eventName = 'TimekeeperEnableProposal' | 'TimekeeperProposal' | 'ForceOpenProposal' | 'PairCreated'
+
+export enum EventName {
+    TimekeeperEnableProposal = 'TimekeeperEnableProposal',
+    TimekeeperProposal = 'TimekeeperProposal',
+    ForceOpenProposal = 'ForceOpenProposal',
+    PairCreated = 'PairCreated'
+  }
 
 export type replacementsTemplate = {
     pairAdmin?: string,
