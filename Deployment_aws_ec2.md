@@ -1,7 +1,7 @@
 # Deployment on AWS EC2
 
 ## Step 1
-Open a terminal where your AWS private key was put
+Open a terminal where your AWS private key was put on your local machine
 
 
 ## Step 2
