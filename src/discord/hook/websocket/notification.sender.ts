@@ -42,8 +42,8 @@ export class NotificationSender implements INotificationSender {
       } else if (eventName === PAIR_CREATED) {
         //Do nothing
       } else if (eventName === TIME_KEEPER_PROPOSAL) {
-        const timeKeeperPerLp = await SmartContractUtils.getTimeKeeperPerLp(this.factoryAddress, this.provider, pairAddress)
-        const daysOpenLP      = await SmartContractUtils.getDaysOpenLP(this.factoryAddress, this.provider, pairAddress)
+        const timeKeeperPerLp = await SmartContractUtils.getTimeKeeperPerLpWaitingForApproval(this.factoryAddress, this.provider, pairAddress)
+        const daysOpenLP      = await SmartContractUtils.getDaysOpenLPProposal(this.factoryAddress, this.provider, pairAddress)
         replacements.openingHours   = timeKeeperPerLp.openingHour
         replacements.openingMinutes = timeKeeperPerLp.openingMinute
         replacements.closingHours   = timeKeeperPerLp.closingHour

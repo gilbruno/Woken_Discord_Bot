@@ -27,10 +27,23 @@ class SmartContractUtils {
     }
 
     //----------------------------------------------------------------------------------------------------------
+    public static async getDaysOpenLPProposal(factoryAddress: string, provider: AlchemyProvider, addressPair: string) {
+        const daysOpenLP = await this.getContractFactoryInstance(factoryAddress, provider).getDaysOpenLPProposal(addressPair)
+        return daysOpenLP
+    }
+
+    //----------------------------------------------------------------------------------------------------------
     public static async getTimeKeeperPerLp (factoryAddress: string, provider: AlchemyProvider, addressPair: string) {
     const timeKeeperPerLp = await this.getContractFactoryInstance(factoryAddress, provider).TimekeeperPerLp(addressPair)
     return timeKeeperPerLp
     }
+
+    //----------------------------------------------------------------------------------------------------------
+    public static async getTimeKeeperPerLpWaitingForApproval (factoryAddress: string, provider: AlchemyProvider, addressPair: string) {
+        const timeKeeperPerLp = await this.getContractFactoryInstance(factoryAddress, provider).TimekeeperPerLpWaitingForApproval(addressPair)
+        return timeKeeperPerLp
+    }
+    
 }    
 
 export default SmartContractUtils
