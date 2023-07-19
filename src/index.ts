@@ -61,8 +61,8 @@ async function webSocket() {
      
     const eventHandler       = new EventHandler(alchemy, factoryAddress)
     const notificationSender = new NotificationSender(alchemy, factoryAddress, provider, wokenHook, log)
-    const alchemy_websocket  = new AlchemyWebsocket(eventHandler, notificationSender, log)
-    alchemy_websocket.startWebsocket()
+    const alchemyWebsocket  = new AlchemyWebsocket(eventHandler, notificationSender, log)
+    alchemyWebsocket.startWebsocket()
 }
 
 // Main function
