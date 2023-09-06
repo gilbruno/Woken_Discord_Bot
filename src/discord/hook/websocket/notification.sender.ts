@@ -27,15 +27,28 @@ export class NotificationSender implements INotificationSender {
       const signerTx  = await getSigner(await getTransactionInfos(this.alchemy, txHash))
   
       let pairAddress: string
+      let token0: string
+      let token1: string
+      let tokenSymbol0: string
+      let tokenSymbol1: string
       let value: number | string
       let pairAdmin: string
+      let pairSymbol: string
   
       let replacements: replacementsTemplate = {} 
       
       const parsedLog = decodeLogs(CONTRACT_NAME, eventName, logs[0])
       pairAddress = parsedLog.args[0]
+
       pairAdmin   = await SmartContractUtils.getPairAdmin(this.factoryAddress, this.provider, pairAddress)
   
+      token0 = await SmartContractUtils.getTokenAddress(pairAddress, 0, this.provider)
+      token1 = await SmartContractUtils.getTokenAddress(pairAddress, 1, this.provider)
+
+      tokenSymbol0 = await SmartContractUtils.getTokenSymbol(token0, this.provider)
+      tokenSymbol1 = await SmartContractUtils.getTokenSymbol(token1, this.provider)
+      pairSymbol = tokenSymbol0+'-'+tokenSymbol1
+
       if (eventName === TIME_KEEPER_ENABLE_PROPOSAL || eventName === FORCE_OPEN_PROPOSAL) {
         value              = parsedLog.args[1]
         replacements.value = value
@@ -56,7 +69,8 @@ export class NotificationSender implements INotificationSender {
       replacements = {...replacements, ...{
           signer: signerTx,
           pairAdmin: pairAdmin,
-          pairAddress: pairAddress
+          pairAddress: pairAddress,
+          pairSymbol: pairSymbol,
         }
       }
   

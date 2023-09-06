@@ -38,6 +38,7 @@ export enum EventName {
 export type replacementsTemplate = {
     pairAdmin?: string,
     pairAddress?: string,
+    pairSymbol?: string,
     value?: number | string,
     daysOpen?: string,
     openingHours?: string,

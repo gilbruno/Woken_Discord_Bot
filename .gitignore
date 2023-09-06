@@ -16,3 +16,5 @@ dist
 # ABI File
 .abi
 
+# launch.json
+launch.json

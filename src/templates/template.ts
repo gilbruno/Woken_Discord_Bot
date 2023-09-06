@@ -7,6 +7,7 @@ A new event awaiting approval was emitted by signer address {{signer}}
 
 Event : :rotating_light: **ForceOpenProposal**
 Pair : {{pairAddress}}
+Symbol: {{pairSymbol}}
 Bool : {{value}}
 
 PairAdmin : {{pairAdmin}}
@@ -18,6 +19,7 @@ A new event awaiting approval was emitted by signer address {{signer}}
 
 Event : :clock3: **TimekeeperProposal** 
 Pair : {{pairAddress}}
+Symbol: {{pairSymbol}}
 DaysOpenLP: {{daysOpen}}
 OpeningHours: {{openingHours}}
 OpeningMinutes: {{openingMinutes}}
@@ -35,6 +37,7 @@ A new event awaiting approval was emitted by signer address {{signer}}
         
 Event : :gear: **TimekeeperEnableProposal**
 Pair : {{pairAddress}}
+Symbol: {{pairSymbol}}
 Bool : {{value}}
      
 PairAdmin : {{pairAdmin}}
@@ -46,7 +49,7 @@ A new event was emitted by signer address {{signer}}
 
 Event : :fire: **PairCreated**
 Pair : {{pairAddress}}
-
+Symbol: {{pairSymbol}}
 PairAdmin : {{pairAdmin}}
 ------------------------------------
     `,
