@@ -65,5 +65,13 @@ async function webSocket() {
     alchemyWebsocket.startWebsocket()
 }
 
+/**
+ * @todo
+ * @param app 
+ */
+async function checkOnStartup(app: string) {
+    //Check if the ABI files are present in the .abi folder
+}
+
 // Main function
 main(argv)
