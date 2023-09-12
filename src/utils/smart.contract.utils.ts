@@ -60,6 +60,12 @@ class SmartContractUtils {
                 case 5:
                     chainName = 'Goerli Testnet';
                     break;
+                case 56:
+                    chainName = 'BNB Chain Mainnet';
+                    break;
+                case 97:
+                    chainName = 'BNB Chain Testnet';
+                    break;    
                 case 137:
                     chainName = 'Polygon Mainnet';
                     break;
@@ -78,6 +84,9 @@ class SmartContractUtils {
                 case 4002:
                     chainName = 'Fantom Opera Testnet';
                     break;
+                case 11297108109:
+                    chainName = 'Basechain Mainnet';
+                    break;    
                 default:
                     chainName = 'Unknown';
                 } 
