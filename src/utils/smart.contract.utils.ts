@@ -60,9 +60,15 @@ class SmartContractUtils {
                 case 5:
                     chainName = 'Goerli Testnet';
                     break;
+                case 10:
+                    chainName = 'Optimism Mainnet';
+                    break;
                 case 56:
                     chainName = 'BNB Chain Mainnet';
                     break;
+                case 69:
+                    chainName = 'Optimism Testnet (Kovan)';
+                    break;        
                 case 97:
                     chainName = 'BNB Chain Testnet';
                     break;    
