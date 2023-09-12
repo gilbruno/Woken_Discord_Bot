@@ -44,8 +44,6 @@ class SmartContractUtils {
         let chainName = '';
         try {
             const chainId = (await provider.getNetwork()).chainId;
-            let chainName = '';
-    
             switch (chainId) {
                 case 1:
                     chainName = 'Ethereum Mainnet';
