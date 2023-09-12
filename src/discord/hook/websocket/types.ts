@@ -46,7 +46,8 @@ export type replacementsTemplate = {
     closingHours?: string,
     closingMinutes?: string,
     utcOffset?: string,
-    isOnlyDay?: string
+    isOnlyDay?: string,
+    chain?: string
 
 }
 

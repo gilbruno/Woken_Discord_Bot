@@ -41,6 +41,10 @@ Useful to do some tests and create LP pair
 
 0xE06B56Fc1E19402E1a9DF3513E024a3b9847c9E5
 
+### Factory Address
+
+0x1da474bE245f0C3bd1eE0F9F9f9B1CC353776b46
+
 # Ways to listen smartc contract events
 
 ## Solution 1 : Websocket
