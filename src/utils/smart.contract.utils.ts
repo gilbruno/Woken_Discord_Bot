@@ -79,7 +79,7 @@ class SmartContractUtils {
                     chainName = 'Fantom Opera Testnet';
                     break;
                 default:
-                        chainName = 'Unknown';
+                    chainName = 'Unknown';
                 } 
         } catch (error) {
             console.error('Error fetching blockchain name:', error);
