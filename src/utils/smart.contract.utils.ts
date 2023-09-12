@@ -40,6 +40,56 @@ class SmartContractUtils {
     }
 
     //----------------------------------------------------------------------------------------------------------
+    public static async getChainName(provider: AlchemyProvider) {
+        let chainName = '';
+        try {
+            const chainId = (await provider.getNetwork()).chainId;
+            let chainName = '';
+    
+            switch (chainId) {
+                case 1:
+                    chainName = 'Ethereum Mainnet';
+                    break;
+                case 3:
+                    chainName = 'Ropsten Testnet';
+                    break;
+                case 4:
+                    chainName = 'Rinkeby Testnet';
+                    break;
+                case 42:
+                    chainName = 'Kovan Testnet';
+                    break;
+                case 5:
+                    chainName = 'Goerli Testnet';
+                    break;
+                case 137:
+                    chainName = 'Polygon Mainnet';
+                    break;
+                case 80001:
+                    chainName = 'Polygon Testnet (Mumbai)';
+                    break;
+                case 42161:
+                    chainName = 'Arbitrum Mainnet';
+                    break;
+                case 421611:
+                    chainName = 'Arbitrum Testnet';
+                    break;
+                case 250:
+                    chainName = 'Fantom Opera Mainnet';
+                    break;
+                case 4002:
+                    chainName = 'Fantom Opera Testnet';
+                    break;
+                default:
+                        chainName = 'Unknown';
+                } 
+        } catch (error) {
+            console.error('Error fetching blockchain name:', error);
+        }         
+        return chainName  
+    }
+
+    //----------------------------------------------------------------------------------------------------------
     public static async getTokenAddress(addressPair: string, tokenNumber: tokenNumber, provider: AlchemyProvider) {
 
         let tokenAddress: string

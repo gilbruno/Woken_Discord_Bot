@@ -34,14 +34,16 @@ export class NotificationSender implements INotificationSender {
       let value: number | string
       let pairAdmin: string
       let pairSymbol: string
-  
+      let chainName: string
+
       let replacements: replacementsTemplate = {} 
       
       const parsedLog = decodeLogs(CONTRACT_NAME, eventName, logs[0])
       pairAddress = parsedLog.args[0]
 
+      chainName   = await SmartContractUtils.getChainName(this.provider)   
       pairAdmin   = await SmartContractUtils.getPairAdmin(this.factoryAddress, this.provider, pairAddress)
-  
+      
       token0 = await SmartContractUtils.getTokenAddress(pairAddress, 0, this.provider)
       token1 = await SmartContractUtils.getTokenAddress(pairAddress, 1, this.provider)
 
@@ -71,6 +73,7 @@ export class NotificationSender implements INotificationSender {
           pairAdmin: pairAdmin,
           pairAddress: pairAddress,
           pairSymbol: pairSymbol,
+          chain: chainName
         }
       }
   

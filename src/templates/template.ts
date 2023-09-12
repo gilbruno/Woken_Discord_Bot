@@ -10,6 +10,7 @@ Pair : {{pairAddress}}
 Symbol: {{pairSymbol}}
 Bool : {{value}}
 
+Chain: {{chain}}
 PairAdmin : {{pairAdmin}}
 ------------------------------------
         `,
@@ -28,6 +29,7 @@ ClosingMinutes: {{closingMinutes}}
 utcOffset: {{utcOffset}}
 isOnlyDay: {{isOnlyDay}}
 
+Chain: {{chain}}
 PairAdmin : {{pairAdmin}}
 ------------------------------------
     `,
@@ -40,6 +42,7 @@ Pair : {{pairAddress}}
 Symbol: {{pairSymbol}}
 Bool : {{value}}
      
+Chain: {{chain}}
 PairAdmin : {{pairAdmin}}
 ------------------------------------
     `,
@@ -50,6 +53,7 @@ A new event was emitted by signer address {{signer}}
 Event : :fire: **PairCreated**
 Pair : {{pairAddress}}
 Symbol: {{pairSymbol}}
+Chain: {{chain}}
 PairAdmin : {{pairAdmin}}
 ------------------------------------
     `,
