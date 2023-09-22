@@ -45,7 +45,7 @@ Useful to do some tests and create LP pair
 
 0x1da474bE245f0C3bd1eE0F9F9f9B1CC353776b46
 
-# Ways to listen smartc contract events
+# Ways to listen smart contract events
 
 ## Solution 1 : Websocket
 
