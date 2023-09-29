@@ -29,10 +29,16 @@ export type network = z.infer<typeof networkSchema>
 //export type eventName = 'TimekeeperEnableProposal' | 'TimekeeperProposal' | 'ForceOpenProposal' | 'PairCreated'
 
 export enum EventName {
-    TimekeeperEnableProposal = 'TimekeeperEnableProposal',
-    TimekeeperProposal = 'TimekeeperProposal',
-    ForceOpenProposal = 'ForceOpenProposal',
-    PairCreated = 'PairCreated'
+    TimekeeperEnableProposal  = 'TimekeeperEnableProposal',
+    TimekeeperProposal        = 'TimekeeperProposal',
+    ForceOpenProposal         = 'ForceOpenProposal',
+    PairCreated               = 'PairCreated',
+    TimekeeperChange          = 'TimekeeperChange',
+    TimekeeperEnable          = 'TimekeeperEnable',
+    ForceOpen                 = 'ForceOpen',
+    // RolePairAdminDaoRequested = 'RolePairAdminDaoRequested',
+    // RolePairAdminRequested    = 'RolePairAdminRequested'
+
   }
 
 export type replacementsTemplate = {

@@ -3,7 +3,7 @@ import { Log } from "../../../logger/log"
 import { templates } from "../../../templates/template"
 import { decodeLogs, getLogsByTx, getSigner, getTransactionInfos } from "../../../utils/ethers.utils"
 import SmartContractUtils from "../../../utils/smart.contract.utils"
-import { buildNotificationText } from "../../../utils/utils"
+import { buildNotificationText, transformBinaryListByDaysOfWeek } from "../../../utils/utils"
 import { WokenHook } from "../woken.hook"
 import { AlchemyLogTransaction, EventName, replacementsTemplate } from "./types"
 import { Alchemy, AlchemyProvider } from 'alchemy-sdk';
@@ -65,7 +65,8 @@ export class NotificationSender implements INotificationSender {
         replacements.closingMinutes = timeKeeperPerLp.closingMinute
         replacements.utcOffset      = timeKeeperPerLp.utcOffset
         replacements.isOnlyDay      = timeKeeperPerLp.isOnlyDay
-        replacements.daysOpen       = daysOpenLP
+        const daysOpen              = transformBinaryListByDaysOfWeek(daysOpenLP)
+        replacements.daysOpen       = daysOpen
       } 
   
       replacements = {...replacements, ...{

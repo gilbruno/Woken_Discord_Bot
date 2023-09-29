@@ -24,7 +24,12 @@ export class AlchemyWebsocket implements IAlchemyWebsocket {
     'TimekeeperEnableProposal' : (tx) => this.handleEvent(tx, EventName.TimekeeperEnableProposal),
     'TimekeeperProposal': (tx) => this.handleEvent(tx, EventName.TimekeeperProposal),
     'ForceOpenProposal': (tx) => this.handleEvent(tx, EventName.ForceOpenProposal),
-    'PairCreated': (tx) => this.handleEvent(tx, EventName.PairCreated)
+    'PairCreated': (tx) => this.handleEvent(tx, EventName.PairCreated),
+    'TimekeeperChange': (tx) => this.handleEvent(tx, EventName.TimekeeperChange),
+    'TimekeeperEnable': (tx) => this.handleEvent(tx, EventName.TimekeeperEnable),
+    'ForceOpen': (tx) => this.handleEvent(tx, EventName.ForceOpen),
+    // 'RolePairAdminDaoRequested': (tx) => this.handleEvent(tx, EventName.RolePairAdminDaoRequested),
+    // 'RolePairAdminRequested' : (tx) => this.handleEvent(tx, EventName.RolePairAdminRequested),
   }
 
   //----------------------------------------------------------------------------------------------------------
