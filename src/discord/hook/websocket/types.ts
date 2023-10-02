@@ -36,8 +36,8 @@ export enum EventName {
     TimekeeperChange          = 'TimekeeperChange',
     TimekeeperEnable          = 'TimekeeperEnable',
     ForceOpen                 = 'ForceOpen',
-    // RolePairAdminDaoRequested = 'RolePairAdminDaoRequested',
-    // RolePairAdminRequested    = 'RolePairAdminRequested'
+    RolePairAdminDaoRequested = 'RolePairAdminDaoRequested',
+    RolePairAdminRequested    = 'RolePairAdminRequested'
 
   }
 

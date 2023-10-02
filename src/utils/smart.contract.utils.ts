@@ -128,6 +128,12 @@ class SmartContractUtils {
     }
 
     //----------------------------------------------------------------------------------------------------------
+    public static async getPairAdminDao(factoryAddress: string, provider: AlchemyProvider, addressPair: string) {
+        const pairAdminDao = await this.getContractFactoryInstance(factoryAddress, provider).pairAdminDao(addressPair)
+        return pairAdminDao
+    }
+
+    //----------------------------------------------------------------------------------------------------------
     public static async getDaysOpenLP(factoryAddress: string, provider: AlchemyProvider, addressPair: string) {
         const daysOpenLP = await this.getContractFactoryInstance(factoryAddress, provider).getDaysOpenLP(addressPair)
         return daysOpenLP

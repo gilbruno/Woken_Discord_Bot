@@ -1,4 +1,4 @@
-import { CONTRACT_NAME, FORCE_OPEN_PROPOSAL, PAIR_CREATED, TIME_KEEPER_ENABLE_PROPOSAL, TIME_KEEPER_PROPOSAL } from "../../../const/constants"
+import { CONTRACT_NAME, FORCE_OPEN_PROPOSAL, PAIR_CREATED, ROLE_PAIR_ADMIN_DAO_REQUESTED, ROLE_PAIR_ADMIN_REQUESTED, TIME_KEEPER_ENABLE_PROPOSAL, TIME_KEEPER_PROPOSAL } from "../../../const/constants"
 import { Log } from "../../../logger/log"
 import { templates } from "../../../templates/template"
 import { decodeLogs, getLogsByTx, getSigner, getTransactionInfos } from "../../../utils/ethers.utils"
@@ -33,6 +33,7 @@ export class NotificationSender implements INotificationSender {
       let tokenSymbol1: string
       let value: number | string
       let pairAdmin: string
+      let pairAdminDao: string
       let pairSymbol: string
       let chainName: string
 
@@ -41,8 +42,9 @@ export class NotificationSender implements INotificationSender {
       const parsedLog = decodeLogs(CONTRACT_NAME, eventName, logs[0])
       pairAddress = parsedLog.args[0]
 
-      chainName   = await SmartContractUtils.getChainName(this.provider)   
-      pairAdmin   = await SmartContractUtils.getPairAdmin(this.factoryAddress, this.provider, pairAddress)
+      chainName    = await SmartContractUtils.getChainName(this.provider)   
+      pairAdmin    = await SmartContractUtils.getPairAdmin(this.factoryAddress, this.provider, pairAddress)
+      pairAdminDao = await SmartContractUtils.getPairAdminDao(this.factoryAddress, this.provider, pairAddress)
       
       token0 = await SmartContractUtils.getTokenAddress(pairAddress, 0, this.provider)
       token1 = await SmartContractUtils.getTokenAddress(pairAddress, 1, this.provider)
@@ -54,8 +56,6 @@ export class NotificationSender implements INotificationSender {
       if (eventName === TIME_KEEPER_ENABLE_PROPOSAL || eventName === FORCE_OPEN_PROPOSAL) {
         value              = parsedLog.args[1]
         replacements.value = value
-      } else if (eventName === PAIR_CREATED) {
-        //Do nothing
       } else if (eventName === TIME_KEEPER_PROPOSAL) {
         const timeKeeperPerLp = await SmartContractUtils.getTimeKeeperPerLpWaitingForApproval(this.factoryAddress, this.provider, pairAddress)
         const daysOpenLP      = await SmartContractUtils.getDaysOpenLPProposal(this.factoryAddress, this.provider, pairAddress)
@@ -67,11 +67,16 @@ export class NotificationSender implements INotificationSender {
         replacements.isOnlyDay      = timeKeeperPerLp.isOnlyDay
         const daysOpen              = transformBinaryListByDaysOfWeek(daysOpenLP)
         replacements.daysOpen       = daysOpen
+      } else if (eventName === PAIR_CREATED 
+        || eventName === ROLE_PAIR_ADMIN_DAO_REQUESTED 
+        || eventName === ROLE_PAIR_ADMIN_REQUESTED) {
+        //Do nothing = Use generic data like 'signer', 'pairAdmin', etc ...
       } 
   
       replacements = {...replacements, ...{
           signer: signerTx,
           pairAdmin: pairAdmin,
+          pairAdminDao: pairAdminDao,
           pairAddress: pairAddress,
           pairSymbol: pairSymbol,
           chain: chainName
