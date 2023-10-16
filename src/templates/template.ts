@@ -107,7 +107,7 @@ A new event awaiting approval was emitted by signer address
 Symbol: {{pairSymbol}}
 Chain: {{chain}}
 Pair : {{pairAddress}}
-PairAdmin(Dao) : {{pairAdminDao}}
+PairAdmin : {{pairAdmin}}
 ------------------------------------
     `,
     'RolePairAdminRequested': `
@@ -120,7 +120,7 @@ A new event awaiting approval was emitted by signer address
 Symbol: {{pairSymbol}}
 Chain: {{chain}}
 Pair : {{pairAddress}}
-PairAdmin(Dao) : {{pairAdminDao}}
+PairAdminDao : {{pairAdminDao}}
 ------------------------------------
     `,
 
