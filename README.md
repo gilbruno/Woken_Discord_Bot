@@ -78,7 +78,7 @@ which can be used to send notiifctations
 ### Step 3 : Edit the _.env_ file
 
 Edit the _.env_ file and fill the _ALCHEMY_API_KEY_ key in this file
-You will need to fill other required keys like _DISCORD_WEBHOOK_URL_ that is the URL provided by Discord when you created a Webhook on a channel.<br>
+You will need to fill other required keys like _DISCORD_WEBHOOK_PROPOSAL_URL_ that is the URL provided by Discord when you created a Webhook on a channel.<br>
 The address of your factory smart contract is required as well. Fill it in _FACTORY_ADDRESS_ key
 
 ### Step 4 : Compile the project

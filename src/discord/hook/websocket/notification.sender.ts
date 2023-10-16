@@ -3,7 +3,7 @@ import { Log } from "../../../logger/log"
 import { templates } from "../../../templates/template"
 import { decodeLogs, getLogsByTx, getSigner, getTransactionInfos } from "../../../utils/ethers.utils"
 import SmartContractUtils from "../../../utils/smart.contract.utils"
-import { buildNotificationText, transformBinaryListByDaysOfWeek } from "../../../utils/utils"
+import { buildNotificationText, isSmartContractEventProposal, transformBinaryListByDaysOfWeek } from "../../../utils/utils"
 import { WokenHook } from "../woken.hook"
 import { AlchemyLogTransaction, EventName, replacementsTemplate } from "./types"
 import { Alchemy, AlchemyProvider } from 'alchemy-sdk';
@@ -98,7 +98,15 @@ export class NotificationSender implements INotificationSender {
   
       this.log.logger.info(msgNotification)
       this.wokenHook.setMsgNotification(msgNotification)
-      this.wokenHook.sendNotification()
+      //If the smart contract event is a Proposal (<=> eventName ends with 'Proposal')
+      if (isSmartContractEventProposal(eventName)) {
+        await this.wokenHook.sendNotificationProposal()  
+      }
+      else {
+        await this.wokenHook.sendNotificationEvents()
+      }
+
+      
   
     }
   }

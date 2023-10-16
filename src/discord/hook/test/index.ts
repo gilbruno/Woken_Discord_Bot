@@ -8,5 +8,5 @@ export async function test() {
 
     const wokenHook = new WokenHook()
     wokenHook.setMsgNotification(msgNotification)
-    wokenHook.sendNotification()
+    wokenHook.sendNotificationProposal()
 }

@@ -41,6 +41,10 @@ export async function isNetworkValid(network: network) {
       return errorMsg
     }
 }
+//----------------------------------------------------------------------------------------------------------
+export function isSmartContractEventProposal(eventName: string): boolean {
+  return eventName.endsWith('Proposal');
+}
 
 //----------------------------------------------------------------------------------------------------------
 export function transformBinaryListByDaysOfWeek(input: number[]): string {
