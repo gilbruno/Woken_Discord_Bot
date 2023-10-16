@@ -1,4 +1,4 @@
-import { CONTRACT_NAME, FORCE_OPEN_PROPOSAL, PAIR_CREATED, ROLE_PAIR_ADMIN_DAO_REQUESTED, ROLE_PAIR_ADMIN_REQUESTED, TIME_KEEPER_ENABLE_PROPOSAL, TIME_KEEPER_PROPOSAL } from "../../../const/constants"
+import { CONTRACT_NAME, FORCE_OPEN_PROPOSAL, PAIR_CREATED, ROLE_PAIR_ADMIN_DAO_REQUESTED, ROLE_PAIR_ADMIN_REQUESTED, TIME_KEEPER_CHANGE, TIME_KEEPER_ENABLE_PROPOSAL, TIME_KEEPER_PROPOSAL } from "../../../const/constants"
 import { Log } from "../../../logger/log"
 import { templates } from "../../../templates/template"
 import { decodeLogs, getLogsByTx, getSigner, getTransactionInfos } from "../../../utils/ethers.utils"
@@ -65,6 +65,17 @@ export class NotificationSender implements INotificationSender {
         replacements.closingMinutes = timeKeeperPerLp.closingMinute
         replacements.utcOffset      = timeKeeperPerLp.utcOffset
         replacements.isOnlyDay      = timeKeeperPerLp.isOnlyDay
+        const daysOpen              = transformBinaryListByDaysOfWeek(daysOpenLP)
+        replacements.daysOpen       = daysOpen
+      } else if (eventName === TIME_KEEPER_CHANGE) {
+        const timeKeeper = await SmartContractUtils.getTimeKeeperPerLp(this.factoryAddress, this.provider, pairAddress)
+        const daysOpenLP      = await SmartContractUtils.getDaysOpenLPProposal(this.factoryAddress, this.provider, pairAddress)
+        replacements.openingHours   = timeKeeper.openingHour
+        replacements.openingMinutes = timeKeeper.openingMinute
+        replacements.closingHours   = timeKeeper.closingHour
+        replacements.closingMinutes = timeKeeper.closingMinute
+        replacements.utcOffset      = timeKeeper.utcOffset
+        replacements.isOnlyDay      = timeKeeper.isOnlyDay
         const daysOpen              = transformBinaryListByDaysOfWeek(daysOpenLP)
         replacements.daysOpen       = daysOpen
       } else if (eventName === PAIR_CREATED 
