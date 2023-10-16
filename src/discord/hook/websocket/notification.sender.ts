@@ -3,7 +3,7 @@ import { Log } from "../../../logger/log"
 import { templates } from "../../../templates/template"
 import { decodeLogs, getLogsByTx, getSigner, getTransactionInfos } from "../../../utils/ethers.utils"
 import SmartContractUtils from "../../../utils/smart.contract.utils"
-import { buildNotificationText, isSmartContractEventProposal, transformBinaryListByDaysOfWeek } from "../../../utils/utils"
+import { buildNotificationText, isSmartContractEventProposal, leftPadWithZero, transformBinaryListByDaysOfWeek } from "../../../utils/utils"
 import { WokenHook } from "../woken.hook"
 import { AlchemyLogTransaction, EventName, replacementsTemplate } from "./types"
 import { Alchemy, AlchemyProvider } from 'alchemy-sdk';
@@ -59,21 +59,21 @@ export class NotificationSender implements INotificationSender {
       } else if (eventName === TIME_KEEPER_PROPOSAL) {
         const timeKeeperPerLp = await SmartContractUtils.getTimeKeeperPerLpWaitingForApproval(this.factoryAddress, this.provider, pairAddress)
         const daysOpenLP      = await SmartContractUtils.getDaysOpenLPProposal(this.factoryAddress, this.provider, pairAddress)
-        replacements.openingHours   = timeKeeperPerLp.openingHour
-        replacements.openingMinutes = timeKeeperPerLp.openingMinute
-        replacements.closingHours   = timeKeeperPerLp.closingHour
-        replacements.closingMinutes = timeKeeperPerLp.closingMinute
+        replacements.openingHours   = leftPadWithZero(timeKeeperPerLp.openingHour)
+        replacements.openingMinutes = leftPadWithZero(timeKeeperPerLp.openingMinute)
+        replacements.closingHours   = leftPadWithZero(timeKeeperPerLp.closingHour)
+        replacements.closingMinutes = leftPadWithZero(timeKeeperPerLp.closingMinute)
         replacements.utcOffset      = timeKeeperPerLp.utcOffset
         replacements.isOnlyDay      = timeKeeperPerLp.isOnlyDay
         const daysOpen              = transformBinaryListByDaysOfWeek(daysOpenLP)
         replacements.daysOpen       = daysOpen
       } else if (eventName === TIME_KEEPER_CHANGE) {
         const timeKeeper = await SmartContractUtils.getTimeKeeperPerLp(this.factoryAddress, this.provider, pairAddress)
-        const daysOpenLP      = await SmartContractUtils.getDaysOpenLPProposal(this.factoryAddress, this.provider, pairAddress)
-        replacements.openingHours   = timeKeeper.openingHour
-        replacements.openingMinutes = timeKeeper.openingMinute
-        replacements.closingHours   = timeKeeper.closingHour
-        replacements.closingMinutes = timeKeeper.closingMinute
+        const daysOpenLP      = await SmartContractUtils.getDaysOpenLP(this.factoryAddress, this.provider, pairAddress)
+        replacements.openingHours   = leftPadWithZero(timeKeeper.openingHour)
+        replacements.openingMinutes = leftPadWithZero(timeKeeper.openingMinute)
+        replacements.closingHours   = leftPadWithZero(timeKeeper.closingHour)
+        replacements.closingMinutes = leftPadWithZero(timeKeeper.closingMinute)
         replacements.utcOffset      = timeKeeper.utcOffset
         replacements.isOnlyDay      = timeKeeper.isOnlyDay
         const daysOpen              = transformBinaryListByDaysOfWeek(daysOpenLP)

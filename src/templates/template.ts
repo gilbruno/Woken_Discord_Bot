@@ -22,15 +22,13 @@ Event : :clock3: **TimekeeperProposal**
 Pair : {{pairAddress}}
 Symbol: {{pairSymbol}}
 DaysOpenLP: {{daysOpen}}
-OpeningHours: {{openingHours}}
-OpeningMinutes: {{openingMinutes}}
-ClosingHours: {{closingHours}}
-ClosingMinutes: {{closingMinutes}}
+OpeningHours: {{openingHours}}:{{openingMinutes}}
+ClosingHours: {{closingHours}}:{{closingMinutes}}
 utcOffset: {{utcOffset}}
 isOnlyDay: {{isOnlyDay}}
 
 Chain: {{chain}}
-PairAdmin : {{pairAdmin}}
+PairAdminDao : {{pairAdminDao}}
 ------------------------------------
     `,
     'TimekeeperEnableProposal': `
@@ -62,9 +60,9 @@ PairAdmin : {{pairAdmin}}
 {{signer}}
 
 Symbol: {{pairSymbol}}
-Days open: 
+Days open: {{daysOpen}}
 Opening hours: {{openingHours}}:{{openingMinutes}}
-Closing hours: {{closingHours}}: {{closingMinutes}}
+Closing hours: {{closingHours}}:{{closingMinutes}}
 UTC: {{utcOffset}}
 24h/day: {{isOnlyDay}}
 

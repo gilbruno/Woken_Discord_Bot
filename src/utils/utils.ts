@@ -41,6 +41,13 @@ export async function isNetworkValid(network: network) {
       return errorMsg
     }
 }
+
+//----------------------------------------------------------------------------------------------------------
+export function leftPadWithZero(inputString: number): string {
+  const str = inputString.toString()
+  return (str.length === 1) ? '0' + str : str;
+}
+
 //----------------------------------------------------------------------------------------------------------
 export function isSmartContractEventProposal(eventName: string): boolean {
   return eventName.endsWith('Proposal');
