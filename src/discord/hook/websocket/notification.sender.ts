@@ -59,8 +59,8 @@ export class NotificationSender implements INotificationSender {
             || eventName === FORCE_OPEN_PROPOSAL 
             || eventName === FORCE_OPEN 
             || eventName === TIME_KEEPER_ENABLE) {
-          value              = parsedLog.args[1]
-          replacements.value = value
+          const isTimekeeperEnabledLP = await SmartContractUtils.isTimekeeperEnabledLP(this.factoryAddress, this.provider, pairAddress)
+          replacements.value = isTimekeeperEnabledLP
         } else if (eventName === TIME_KEEPER_PROPOSAL) {
           const timeKeeperPerLp = await SmartContractUtils.getTimeKeeperPerLpWaitingForApproval(this.factoryAddress, this.provider, pairAddress)
           const daysOpenLP      = await SmartContractUtils.getDaysOpenLPProposal(this.factoryAddress, this.provider, pairAddress)
