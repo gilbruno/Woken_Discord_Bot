@@ -11,7 +11,7 @@ Symbol: {{pairSymbol}}
 Bool : {{value}}
 
 Chain: {{chain}}
-PairAdmin : {{pairAdmin}}
+PairAdminDao : {{pairAdminDao}}
 ------------------------------------
         `,
     'TimekeeperProposal': `
@@ -41,7 +41,7 @@ Symbol: {{pairSymbol}}
 Bool : {{value}}
      
 Chain: {{chain}}
-PairAdmin : {{pairAdmin}}
+PairAdminDao : {{pairAdminDao}}
 ------------------------------------
     `,
     'PairCreated': `
@@ -68,7 +68,7 @@ UTC: {{utcOffset}}
 
 Chain: {{chain}}
 Pair : {{pairAddress}}
-PairAdmin(Dao) : {{pairAdmin}}
+PairAdmin : {{pairAdmin}}
 ------------------------------------
     `,
     'TimekeeperEnable': `
@@ -80,7 +80,7 @@ Bool: {{value}}
 
 Chain: {{chain}}
 Pair : {{pairAddress}}
-PairAdmin(Dao) : {{pairAdmin}}
+PairAdmin : {{pairAdmin}}
 ------------------------------------
     `,
     'ForceOpen': `
@@ -92,7 +92,7 @@ Bool: {{value}}
 
 Chain: {{chain}}
 Pair : {{pairAddress}}
-PairAdmin(Dao) : {{pairAdmin}}
+PairAdmin : {{pairAdmin}}
 ------------------------------------
     `,
     'RolePairAdminDaoRequested': `
