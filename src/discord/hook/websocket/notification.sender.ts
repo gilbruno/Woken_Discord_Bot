@@ -31,7 +31,7 @@ export class NotificationSender implements INotificationSender {
       let token1: string
       let tokenSymbol0: string
       let tokenSymbol1: string
-      let value: number | string
+      let boolValue: number | string
       let pairAdmin: string
       let pairAdminDao: string
       let pairSymbol: string
@@ -59,8 +59,22 @@ export class NotificationSender implements INotificationSender {
             || eventName === FORCE_OPEN_PROPOSAL 
             || eventName === FORCE_OPEN 
             || eventName === TIME_KEEPER_ENABLE) {
-          const isTimekeeperEnabledLP = await SmartContractUtils.isTimekeeperEnabledLP(this.factoryAddress, this.provider, pairAddress)
-          replacements.value = isTimekeeperEnabledLP
+              
+              switch (eventName) {
+                case FORCE_OPEN :
+                  boolValue = await SmartContractUtils.isForceOpen(this.factoryAddress, this.provider, pairAddress)
+                  break;
+                case FORCE_OPEN_PROPOSAL :
+                  boolValue = await SmartContractUtils.isForceOpenProposal(this.factoryAddress, this.provider, pairAddress)
+                  break;
+                case TIME_KEEPER_ENABLE :
+                  boolValue = await SmartContractUtils.isTimekeeperEnabledLP(this.factoryAddress, this.provider, pairAddress)
+                  break;
+                case TIME_KEEPER_ENABLE_PROPOSAL :
+                  boolValue = await SmartContractUtils.isTimekeeperEnabledLPProposal(this.factoryAddress, this.provider, pairAddress)
+                  break;
+              }  
+              replacements.value = boolValue
         } else if (eventName === TIME_KEEPER_PROPOSAL) {
           const timeKeeperPerLp = await SmartContractUtils.getTimeKeeperPerLpWaitingForApproval(this.factoryAddress, this.provider, pairAddress)
           const daysOpenLP      = await SmartContractUtils.getDaysOpenLPProposal(this.factoryAddress, this.provider, pairAddress)

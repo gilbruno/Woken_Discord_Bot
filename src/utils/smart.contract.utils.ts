@@ -132,6 +132,23 @@ class SmartContractUtils {
         const isTimekeeperEnabledLP = await this.getContractFactoryInstance(factoryAddress, provider).isTimekeeperEnabledLP(addressPair)
         return isTimekeeperEnabledLP
     }
+    //----------------------------------------------------------------------------------------------------------
+    public static async isTimekeeperEnabledLPProposal(factoryAddress: string, provider: AlchemyProvider, addressPair: string) {
+        const isTimekeeperEnabledLPProposal = await this.getContractFactoryInstance(factoryAddress, provider).isTimekeeperEnabledLPProposal(addressPair)
+        return isTimekeeperEnabledLPProposal
+    }
+    
+    //----------------------------------------------------------------------------------------------------------
+    public static async isForceOpen(factoryAddress: string, provider: AlchemyProvider, addressPair: string) {
+        const isForceOpen = await this.getContractFactoryInstance(factoryAddress, provider).isForceOpen(addressPair)
+        return isForceOpen
+    }
+
+    //----------------------------------------------------------------------------------------------------------
+    public static async isForceOpenProposal(factoryAddress: string, provider: AlchemyProvider, addressPair: string) {
+        const isForceOpenProposal = await this.getContractFactoryInstance(factoryAddress, provider).isForceOpenProposal(addressPair)
+        return isForceOpenProposal
+    }
 
     //----------------------------------------------------------------------------------------------------------
     public static async getPairAdminDao(factoryAddress: string, provider: AlchemyProvider, addressPair: string) {
