@@ -54,6 +54,11 @@ export function isSmartContractEventProposal(eventName: string): boolean {
 }
 
 //----------------------------------------------------------------------------------------------------------
+export function isSmartContractEventRole(eventName: string): boolean {
+  return eventName.startsWith('Role');
+}
+
+//----------------------------------------------------------------------------------------------------------
 export function transformBinaryListByDaysOfWeek(input: number[]): string {
 
   enum DAYS_OF_WEEK {

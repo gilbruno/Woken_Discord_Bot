@@ -3,7 +3,7 @@ import { Log } from "../../../logger/log"
 import { templates } from "../../../templates/template"
 import { decodeLogs, getLogsByTx, getSigner, getTransactionInfos } from "../../../utils/ethers.utils"
 import SmartContractUtils from "../../../utils/smart.contract.utils"
-import { buildNotificationText, isSmartContractEventProposal, leftPadWithZero, transformBinaryListByDaysOfWeek } from "../../../utils/utils"
+import { buildNotificationText, isSmartContractEventProposal, isSmartContractEventRole, leftPadWithZero, transformBinaryListByDaysOfWeek } from "../../../utils/utils"
 import { WokenHook } from "../woken.hook"
 import { AlchemyLogTransaction, EventName, replacementsTemplate } from "./types"
 import { Alchemy, AlchemyProvider } from 'alchemy-sdk';
@@ -117,8 +117,8 @@ export class NotificationSender implements INotificationSender {
     
         this.log.logger.info(msgNotification)
         this.wokenHook.setMsgNotification(msgNotification)
-        //If the smart contract event is a Proposal (<=> eventName ends with 'Proposal')
-        if (isSmartContractEventProposal(eventName)) {
+        //If the smart contract event is a Proposal (<=> eventName ends with 'Proposal'), send it to the appropriate channel
+        if (isSmartContractEventProposal(eventName) || isSmartContractEventRole(eventName)) {
           await this.wokenHook.sendNotificationProposal()  
         }
         else {
