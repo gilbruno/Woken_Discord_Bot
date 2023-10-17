@@ -72,11 +72,11 @@ PairAdmin(Dao) : {{pairAdmin}}
 ------------------------------------
     `,
     'TimekeeperEnable': `
-:clock3: TimekeeperEnable event by signer address
+:gear: TimekeeperEnable event by signer address
 {{signer}}
 
 Symbol: {{pairSymbol}}
-Bool: 
+Bool: {{value}}
 
 Chain: {{chain}}
 Pair : {{pairAddress}}
@@ -84,11 +84,11 @@ PairAdmin(Dao) : {{pairAdmin}}
 ------------------------------------
     `,
     'ForceOpen': `
-:clock3: ForceOpen event by signer address
+:rotating_light: ForceOpen event by signer address
 {{signer}}
 
 Symbol: {{pairSymbol}}
-Bool: 
+Bool: {{value}}
 
 Chain: {{chain}}
 Pair : {{pairAddress}}

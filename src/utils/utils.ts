@@ -43,7 +43,7 @@ export async function isNetworkValid(network: network) {
 }
 
 //----------------------------------------------------------------------------------------------------------
-export function leftPadWithZero(inputString: number): string {
+export function   (inputString: number): string {
   const str = inputString.toString()
   return (str.length === 1) ? '0' + str : str;
 }
