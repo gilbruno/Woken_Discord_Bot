@@ -39,75 +39,78 @@ export class NotificationSender implements INotificationSender {
 
       let replacements: replacementsTemplate = {} 
       
-      const parsedLog = decodeLogs(CONTRACT_NAME, eventName, logs[0])
-      pairAddress = parsedLog.args[0]
-
-      chainName    = await SmartContractUtils.getChainName(this.provider)   
-      pairAdmin    = await SmartContractUtils.getPairAdmin(this.factoryAddress, this.provider, pairAddress)
-      pairAdminDao = await SmartContractUtils.getPairAdminDao(this.factoryAddress, this.provider, pairAddress)
-      
-      token0 = await SmartContractUtils.getTokenAddress(pairAddress, 0, this.provider)
-      token1 = await SmartContractUtils.getTokenAddress(pairAddress, 1, this.provider)
-
-      tokenSymbol0 = await SmartContractUtils.getTokenSymbol(token0, this.provider)
-      tokenSymbol1 = await SmartContractUtils.getTokenSymbol(token1, this.provider)
-      pairSymbol = tokenSymbol0+'-'+tokenSymbol1
-
-      if (eventName === TIME_KEEPER_ENABLE_PROPOSAL || eventName === FORCE_OPEN_PROPOSAL) {
-        value              = parsedLog.args[1]
-        replacements.value = value
-      } else if (eventName === TIME_KEEPER_PROPOSAL) {
-        const timeKeeperPerLp = await SmartContractUtils.getTimeKeeperPerLpWaitingForApproval(this.factoryAddress, this.provider, pairAddress)
-        const daysOpenLP      = await SmartContractUtils.getDaysOpenLPProposal(this.factoryAddress, this.provider, pairAddress)
-        replacements.openingHours   = leftPadWithZero(timeKeeperPerLp.openingHour)
-        replacements.openingMinutes = leftPadWithZero(timeKeeperPerLp.openingMinute)
-        replacements.closingHours   = leftPadWithZero(timeKeeperPerLp.closingHour)
-        replacements.closingMinutes = leftPadWithZero(timeKeeperPerLp.closingMinute)
-        replacements.utcOffset      = timeKeeperPerLp.utcOffset
-        replacements.isOnlyDay      = timeKeeperPerLp.isOnlyDay
-        const daysOpen              = transformBinaryListByDaysOfWeek(daysOpenLP)
-        replacements.daysOpen       = daysOpen
-      } else if (eventName === TIME_KEEPER_CHANGE) {
-        const timeKeeper = await SmartContractUtils.getTimeKeeperPerLp(this.factoryAddress, this.provider, pairAddress)
-        const daysOpenLP      = await SmartContractUtils.getDaysOpenLP(this.factoryAddress, this.provider, pairAddress)
-        replacements.openingHours   = leftPadWithZero(timeKeeper.openingHour)
-        replacements.openingMinutes = leftPadWithZero(timeKeeper.openingMinute)
-        replacements.closingHours   = leftPadWithZero(timeKeeper.closingHour)
-        replacements.closingMinutes = leftPadWithZero(timeKeeper.closingMinute)
-        replacements.utcOffset      = timeKeeper.utcOffset
-        replacements.isOnlyDay      = timeKeeper.isOnlyDay
-        const daysOpen              = transformBinaryListByDaysOfWeek(daysOpenLP)
-        replacements.daysOpen       = daysOpen
-      } else if (eventName === PAIR_CREATED 
-        || eventName === ROLE_PAIR_ADMIN_DAO_REQUESTED 
-        || eventName === ROLE_PAIR_ADMIN_REQUESTED) {
-        //Do nothing = Use generic data like 'signer', 'pairAdmin', etc ...
-      } 
+      //Parse all logs given by its tx hash and send notifications
+      for (let i = 0; i < logs.length; i++) {
+        const parsedLog = decodeLogs(CONTRACT_NAME, eventName, logs[i])
+        pairAddress = parsedLog.args[0]
   
-      replacements = {...replacements, ...{
-          signer: signerTx,
-          pairAdmin: pairAdmin,
-          pairAdminDao: pairAdminDao,
-          pairAddress: pairAddress,
-          pairSymbol: pairSymbol,
-          chain: chainName
+        chainName    = await SmartContractUtils.getChainName(this.provider)   
+        pairAdmin    = await SmartContractUtils.getPairAdmin(this.factoryAddress, this.provider, pairAddress)
+        pairAdminDao = await SmartContractUtils.getPairAdminDao(this.factoryAddress, this.provider, pairAddress)
+        
+        token0 = await SmartContractUtils.getTokenAddress(pairAddress, 0, this.provider)
+        token1 = await SmartContractUtils.getTokenAddress(pairAddress, 1, this.provider)
+  
+        tokenSymbol0 = await SmartContractUtils.getTokenSymbol(token0, this.provider)
+        tokenSymbol1 = await SmartContractUtils.getTokenSymbol(token1, this.provider)
+        pairSymbol = tokenSymbol0+'-'+tokenSymbol1
+  
+        if (eventName === TIME_KEEPER_ENABLE_PROPOSAL || eventName === FORCE_OPEN_PROPOSAL) {
+          value              = parsedLog.args[1]
+          replacements.value = value
+        } else if (eventName === TIME_KEEPER_PROPOSAL) {
+          const timeKeeperPerLp = await SmartContractUtils.getTimeKeeperPerLpWaitingForApproval(this.factoryAddress, this.provider, pairAddress)
+          const daysOpenLP      = await SmartContractUtils.getDaysOpenLPProposal(this.factoryAddress, this.provider, pairAddress)
+          replacements.openingHours   = leftPadWithZero(timeKeeperPerLp.openingHour)
+          replacements.openingMinutes = leftPadWithZero(timeKeeperPerLp.openingMinute)
+          replacements.closingHours   = leftPadWithZero(timeKeeperPerLp.closingHour)
+          replacements.closingMinutes = leftPadWithZero(timeKeeperPerLp.closingMinute)
+          replacements.utcOffset      = timeKeeperPerLp.utcOffset
+          replacements.isOnlyDay      = timeKeeperPerLp.isOnlyDay
+          const daysOpen              = transformBinaryListByDaysOfWeek(daysOpenLP)
+          replacements.daysOpen       = daysOpen
+        } else if (eventName === TIME_KEEPER_CHANGE) {
+          const timeKeeper = await SmartContractUtils.getTimeKeeperPerLp(this.factoryAddress, this.provider, pairAddress)
+          const daysOpenLP      = await SmartContractUtils.getDaysOpenLP(this.factoryAddress, this.provider, pairAddress)
+          replacements.openingHours   = leftPadWithZero(timeKeeper.openingHour)
+          replacements.openingMinutes = leftPadWithZero(timeKeeper.openingMinute)
+          replacements.closingHours   = leftPadWithZero(timeKeeper.closingHour)
+          replacements.closingMinutes = leftPadWithZero(timeKeeper.closingMinute)
+          replacements.utcOffset      = timeKeeper.utcOffset
+          replacements.isOnlyDay      = timeKeeper.isOnlyDay
+          const daysOpen              = transformBinaryListByDaysOfWeek(daysOpenLP)
+          replacements.daysOpen       = daysOpen
+        } else if (eventName === PAIR_CREATED 
+          || eventName === ROLE_PAIR_ADMIN_DAO_REQUESTED 
+          || eventName === ROLE_PAIR_ADMIN_REQUESTED) {
+          //Do nothing = Use generic data like 'signer', 'pairAdmin', etc ...
+        } 
+    
+        replacements = {...replacements, ...{
+            signer: signerTx,
+            pairAdmin: pairAdmin,
+            pairAdminDao: pairAdminDao,
+            pairAddress: pairAddress,
+            pairSymbol: pairSymbol,
+            chain: chainName
+          }
         }
-      }
-  
-      let msgNotification = buildNotificationText(templates, eventName, replacements)
-  
-      this.log.logger.info(msgNotification)
-      this.wokenHook.setMsgNotification(msgNotification)
-      //If the smart contract event is a Proposal (<=> eventName ends with 'Proposal')
-      if (isSmartContractEventProposal(eventName)) {
-        await this.wokenHook.sendNotificationProposal()  
-      }
-      else {
-        await this.wokenHook.sendNotificationEvents()
+    
+        let msgNotification = buildNotificationText(templates, eventName, replacements)
+    
+        this.log.logger.info(msgNotification)
+        this.wokenHook.setMsgNotification(msgNotification)
+        //If the smart contract event is a Proposal (<=> eventName ends with 'Proposal')
+        if (isSmartContractEventProposal(eventName)) {
+          await this.wokenHook.sendNotificationProposal()  
+        }
+        else {
+          await this.wokenHook.sendNotificationEvents()
+        }
+            
       }
 
-      
-  
+    
     }
   }
   

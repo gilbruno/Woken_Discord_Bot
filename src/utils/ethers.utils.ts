@@ -100,10 +100,17 @@ export const getLogs = async(alchemy: Alchemy, contractName: string, blockHash: 
 }
 
 //----------------------------------------------------------------------------------------------------------
-export async function getLogsByTx(alchemy: Alchemy, tx: AlchemyLogTransaction, indexLog?: number)
+export async function getLogsByTxAndIndex(alchemy: Alchemy, tx: AlchemyLogTransaction, indexLog?: number)
 {
     const txInfos  = await getTransactionInfos(alchemy, tx.transactionHash)
     return (indexLog!==undefined)?txInfos.logs[indexLog]:txInfos.logs
+}
+
+//----------------------------------------------------------------------------------------------------------
+export async function getLogsByTx(alchemy: Alchemy, tx: AlchemyLogTransaction)
+{
+    const txInfos  = await getTransactionInfos(alchemy, tx.transactionHash)
+    return txInfos.logs
 }
 
 //----------------------------------------------------------------------------------------------------------
