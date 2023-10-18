@@ -1,6 +1,7 @@
 import { AlchemyProvider, Contract } from "alchemy-sdk";
 import { getAbi } from "./ethers.utils";
-
+import { ChainInfo, networkType } from "../discord/hook/websocket/types";
+import { Network } from "alchemy-sdk";
 
 export type tokenNumber = 0 | 1
 
@@ -40,64 +41,115 @@ class SmartContractUtils {
     }
 
     //----------------------------------------------------------------------------------------------------------
+    public getChainIdByChainName(chainName: string) {
+        let chainId = ''
+        switch (chainName) {
+            case Network.ETH_MAINNET: 
+                chainId = '1'
+                break    
+            case Network.ETH_GOERLI: 
+                chainId = '5'
+                break    
+            case 'bsc-mainnet': 
+                chainId = '56'
+                break    
+            case 'bsc-testnet': 
+                chainId = '97'
+                break    
+            case 'arbitrum': 
+                chainId = '42161'
+                break    
+            case 'optimism': 
+                chainId = '10'
+                break    
+        }    
+    }
+
+    //----------------------------------------------------------------------------------------------------------
+    public getChainCodeByChainName(chainName: string) {
+        let chainId = ''
+        switch (chainName) {
+            case Network.ETH_MAINNET: 
+                chainId = '1'
+                break    
+            case Network.ETH_GOERLI: 
+                chainId = '5'
+                break    
+            case 'bsc-mainnet': 
+                chainId = '56'
+                break    
+            case 'bsc-testnet': 
+                chainId = '97'
+                break    
+            case 'arbitrum': 
+                chainId = '42161'
+                break    
+            case 'optimism': 
+                chainId = '10'
+                break    
+
+        }    
+    }
+
+    //----------------------------------------------------------------------------------------------------------
     public static async getChainName(provider: AlchemyProvider) {
-        let chainName = '';
+        let chainName = ''
         try {
             const chainId = (await provider.getNetwork()).chainId;
             switch (chainId) {
                 case 1:
-                    chainName = 'Ethereum Mainnet';
-                    break;
+                    chainName = 'Ethereum Mainnet'
+                    break
                 case 3:
-                    chainName = 'Ropsten Testnet';
-                    break;
+                    chainName = 'Ropsten Testnet'
+                    break
                 case 4:
-                    chainName = 'Rinkeby Testnet';
-                    break;
+                    chainName = 'Rinkeby Testnet'
+                    break
                 case 42:
-                    chainName = 'Kovan Testnet';
-                    break;
+                    chainName = 'Kovan Testnet'
+                    break
                 case 5:
-                    chainName = 'Goerli Testnet';
-                    break;
+                    chainName = 'Goerli Testnet'
+                    break
                 case 10:
-                    chainName = 'Optimism Mainnet';
-                    break;
+                    chainName = 'Optimism Mainnet'
+                    break
                 case 56:
-                    chainName = 'BNB Chain Mainnet';
-                    break;
+                    chainName = 'BNB Chain Mainnet'
+                    break
                 case 69:
-                    chainName = 'Optimism Testnet (Kovan)';
-                    break;        
+                    chainName = 'Optimism Testnet (Kovan)'
+                    break        
                 case 97:
-                    chainName = 'BNB Chain Testnet';
-                    break;    
+                    chainName = 'BNB Chain Testnet'
+                    break    
                 case 137:
-                    chainName = 'Polygon Mainnet';
-                    break;
+                    chainName = 'Polygon Mainnet'
+                    break
                 case 80001:
-                    chainName = 'Polygon Testnet (Mumbai)';
-                    break;
+                    chainName = 'Polygon Testnet (Mumbai)'
+                    break
                 case 42161:
-                    chainName = 'Arbitrum Mainnet';
-                    break;
+                    chainName = 'Arbitrum Mainnet'
+                    break
                 case 421611:
-                    chainName = 'Arbitrum Testnet';
-                    break;
+                    chainName = 'Arbitrum Testnet'
+                    break
                 case 250:
-                    chainName = 'Fantom Opera Mainnet';
-                    break;
+                    chainName = 'Fantom Opera Mainnet'
+                    break
                 case 4002:
-                    chainName = 'Fantom Opera Testnet';
-                    break;
+                    chainName = 'Fantom Opera Testnet'
+                    break
                 case 11297108109:
-                    chainName = 'Basechain Mainnet';
-                    break;    
+                    chainName = 'Basechain Mainnet'
+                    break  
                 default:
-                    chainName = 'Unknown';
+                    chainName = 'Unknown'
                 } 
         } catch (error) {
-            console.error('Error fetching blockchain name:', error);
+            console.error('Error fetching blockchain name:', error)
         }         
         return chainName  
     }

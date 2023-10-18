@@ -1,13 +1,14 @@
 import { Contract } from "@ethersproject/contracts";
 import { getAbi } from "./ethers.utils";
-import { JsonRpcProvider } from "@ethersproject/providers";
+import { JsonRpcProvider, Network, getNetwork } from "@ethersproject/providers";
+import { ChainInfo } from "../discord/hook/websocket/types";
 
 
 export type tokenNumber = 0 | 1
 
 class EtherJsSmartContractUtils {
 
-    private static FACTORY_CONTRACT_NAME = 'UniswapV2Factory' as const 
+    public static FACTORY_CONTRACT_NAME = 'UniswapV2Factory' as const 
 
     private static UNISWAP_PAIR_CONTRACT_NAME = 'UniswapV2Pair' as const 
 
@@ -38,6 +39,33 @@ class EtherJsSmartContractUtils {
         // Load the contract
         const contract = new Contract(erc20Address, erc20Abi, provider);
         return contract
+    }
+
+    //----------------------------------------------------------------------------------------------------------
+    public static getAllChains(): ChainInfo[] {
+        const predefinedChains = [1, 5].map((id): ChainInfo => {
+            const network: Network = getNetwork(id);
+            return {
+                chainName: network.name,
+                chainId: network.chainId
+            };
+        });
+    
+        const customChains: ChainInfo[] = [
+            { chainName: "BSC Mainnet", chainId: 56 },
+            { chainName: "BSC Testnet", chainId: 97 },
+            { chainName: "Optimism Mainnet", chainId: 10 },
+            { chainName: "Optimism Testnet", chainId: 69 },
+            { chainName: "Arbitrum Mainnet", chainId: 42161 },
+            { chainName: "Arbitrum Testnet", chainId: 421611 },
+            { chainName: "Fantom Mainnet", chainId: 250 },
+            { chainName: "Fantom Testnet", chainId: 4002 },
+            // Note: The chain IDs for "Base" are placeholders; you'll need to replace them.
+            { chainName: "Base Mainnet", chainId: -1 },
+            { chainName: "Base Testnet", chainId: -2 }
+        ];
+    
+        return [...predefinedChains, ...customChains];
     }
 
     //----------------------------------------------------------------------------------------------------------

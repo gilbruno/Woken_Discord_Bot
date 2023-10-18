@@ -13,7 +13,7 @@ export type AlchemyLogTransaction = {
     logIndex: number
 }
 
-export type networkType = Network.ETH_GOERLI | Network.ETH_SEPOLIA | Network.ETH_MAINNET
+export type networkType = Network.ETH_GOERLI | Network.ETH_SEPOLIA | Network.ETH_MAINNET 
     
 const networkTypeSchema = z.enum([Network.ETH_GOERLI, Network.ETH_SEPOLIA, Network.ETH_MAINNET])
 
@@ -25,6 +25,11 @@ export const networkSchema = z.object(
 )
 
 export type network = z.infer<typeof networkSchema>
+
+export interface ChainInfo {
+    chainName: string;
+    chainId: number;
+}
 
 //export type eventName = 'TimekeeperEnableProposal' | 'TimekeeperProposal' | 'ForceOpenProposal' | 'PairCreated'
 

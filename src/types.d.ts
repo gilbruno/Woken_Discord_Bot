@@ -11,6 +11,8 @@ declare global {
             DISCORD_WEBHOOK_EVENTS_URL: string,
             ALCHEMY_API_KEY: string,
             FACTORY_ADDRESS: string,
+            RPC_URL: string,
+            CHAIN_ID: string,
             PORT: number,
             NETWORK: networkType,
             PRIVATE_KEY: string

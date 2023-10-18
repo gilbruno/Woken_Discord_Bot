@@ -6,6 +6,7 @@ import { AbiCoder } from "@ethersproject/abi";
 import { Log } from "../../../../logger/log";
 import { EventHandlers } from "./etherjs.websocket";
 import { IEthersJsNotificationSender } from "./etherjs.notification.sender";
+import EtherJsSmartContractUtils from "../../../../utils/smart.contract.ethersjs.utils";
 
 export interface IEthersJsEventListener {
     factoryAddress: any;
@@ -48,7 +49,7 @@ export class EthersJsEventListener implements IEthersJsEventListener {
         // Add more handlers as needed
     };
 
-    constructor(alchemyAPIKey: string, provider: JsonRpcProvider, public factoryAddress: string, private readonly log: Log) {
+    constructor(provider: JsonRpcProvider, public factoryAddress: string, private readonly log: Log) {
         this.provider = provider 
         this.factoryAddress = factoryAddress
         this.coder = new AbiCoder()
@@ -67,7 +68,7 @@ export class EthersJsEventListener implements IEthersJsEventListener {
             }))
     }
     listenToEvents(notificationSender: IEthersJsNotificationSender) {
-        const abi = getAbi('UniswapV2Factory')
+        const abi = getAbi(EtherJsSmartContractUtils.FACTORY_CONTRACT_NAME)
         const events = this.extractEventDescriptors(abi);
 
         //Display errors in case of errors

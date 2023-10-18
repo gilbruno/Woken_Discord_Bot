@@ -15,6 +15,7 @@ import { EthersJsWebsocket } from "./discord/hook/websocket/ethers.js/etherjs.we
 import { EthersJsEventListener } from "./discord/hook/websocket/ethers.js/ethersjs.event.handler";
 import { EthersJsNotificationSender } from "./discord/hook/websocket/ethers.js/etherjs.notification.sender";
 import { JsonRpcProvider } from "@ethersproject/providers";
+import EtherJsSmartContractUtils from "./utils/smart.contract.ethersjs.utils";
 
 
 dotenv.config()
@@ -76,6 +77,8 @@ async function webSocket() {
 
 async function webSocketEtherJs() {
     const apiKey: string          = process.env.ALCHEMY_API_KEY
+    const rpcUrl: string          = process.env.RPC_URL
+    const chainId: string         = process.env.CHAIN_ID
     const factoryAddress: string  = process.env.FACTORY_ADDRESS
     const networkSet: networkType = process.env.NETWORK 
     const settings = {
@@ -95,12 +98,20 @@ async function webSocketEtherJs() {
      }
      
     // Usage
-    const provider = new JsonRpcProvider(`https://eth-goerli.alchemyapi.io/v2/${apiKey}`, {
-          name: 'Goerli Testnet',
-          chainId: 5
+    const chains = EtherJsSmartContractUtils.getAllChains()
+    const chain = chains.filter(
+        (elt) => elt.chainId == Number(chainId)
+    )
+    let chainName = chain[0].chainName
+    chainName = (chainName === 'homestead')?'ethereum mainnet':chainName
+    chainName = (chainName === 'goerli')?'ethereum goerli':chainName
+    
+    const provider = new JsonRpcProvider(rpcUrl, {
+          name: chainName,
+          chainId: chain[0].chainId
         })
     const wokenHook = new WokenHook()
-    const eventHandler       = new EthersJsEventListener(apiKey, provider, factoryAddress, log)
+    const eventHandler       = new EthersJsEventListener(provider, factoryAddress, log)
     const notificationSender = new EthersJsNotificationSender(factoryAddress, provider, wokenHook, log)
     const eventListener = new EthersJsWebsocket(eventHandler, notificationSender, log);
     eventListener.startWebsocket();
