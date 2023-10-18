@@ -11,6 +11,11 @@ import { Log } from "./logger/log";
 import { isNetworkValid } from "./utils/utils";
 import { EventHandler } from "./discord/hook/websocket/event.handler";
 import { NotificationSender } from "./discord/hook/websocket/notification.sender";
+import { EthersJsWebsocket } from "./discord/hook/websocket/ethers.js/etherjs.websocket";
+import { EthersJsEventListener } from "./discord/hook/websocket/ethers.js/ethersjs.event.handler";
+import { EthersJsNotificationSender } from "./discord/hook/websocket/ethers.js/etherjs.notification.sender";
+import { JsonRpcProvider } from "@ethersproject/providers";
+
 
 dotenv.config()
 
@@ -35,6 +40,10 @@ async function main(argv: any) {
     else if (argv.app == 'websocket') {
         await webSocket()
     }
+    else if (argv.app == 'websocket_etherjs') {
+        await webSocketEtherJs()
+    }
+    
 }
 
 async function webSocket() {
@@ -63,6 +72,40 @@ async function webSocket() {
     const notificationSender = new NotificationSender(alchemy, factoryAddress, provider, wokenHook, log)
     const alchemyWebsocket  = new AlchemyWebsocket(eventHandler, notificationSender, log)
     alchemyWebsocket.startWebsocket()
+}
+
+async function webSocketEtherJs() {
+    const apiKey: string          = process.env.ALCHEMY_API_KEY
+    const factoryAddress: string  = process.env.FACTORY_ADDRESS
+    const networkSet: networkType = process.env.NETWORK 
+    const settings = {
+        apiKey: apiKey, 
+        network: networkSet
+      }
+    const log       = new Log()
+    
+    // Validate network before instantiating AlchemyWebsocket
+     const network  = {
+        type: networkSet
+      }
+     const errorNetwork = await isNetworkValid(network)
+
+     if (errorNetwork) {
+       throw new Error(errorNetwork)
+     }
+     
+    // Usage
+    const provider = new JsonRpcProvider(`https://eth-goerli.alchemyapi.io/v2/${apiKey}`, {
+          name: 'Goerli Testnet',
+          chainId: 5
+        })
+    const wokenHook = new WokenHook()
+    const eventHandler       = new EthersJsEventListener(apiKey, provider, factoryAddress, log)
+    const notificationSender = new EthersJsNotificationSender(factoryAddress, provider, wokenHook, log)
+    const eventListener = new EthersJsWebsocket(eventHandler, notificationSender, log);
+    eventListener.startWebsocket();
+    
+
 }
 
 /**

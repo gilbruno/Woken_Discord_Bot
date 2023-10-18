@@ -18,7 +18,7 @@ export class AlchemyWebsocket implements IAlchemyWebsocket {
   //----------------------------------------------------------------------------------------------------------
   private handleEvent = async (tx: AlchemyLogTransaction, eventName: EventName) => {
     this.notificationSender.sendNotificationsToDiscordChannel(eventName, tx)
-}
+  }
   //List of events to listen with their callback functions
   public events: Record<EventName, callbackWebSocket> = {
     'TimekeeperEnableProposal' : (tx) => this.handleEvent(tx, EventName.TimekeeperEnableProposal),
@@ -39,20 +39,6 @@ export class AlchemyWebsocket implements IAlchemyWebsocket {
       this.log.logger.info(`Subscription to event log for address ${this.eventHandler.factoryAddress} and event ${event}`)
       this.eventHandler.subscribeToEvent(event, this.events[event])  
     }
-  //Remarks : It works in a non-loop manner as well like below
-  //PairCreated Subscription
-  // log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${PAIR_CREATED}`)
-  // subscribeToEvent(PAIR_CREATED, callBackPairCreated)
-  // //TimekeeperEnableProposal Subscription
-  // log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${TIME_KEEPER_ENABLE_PROPOSAL}`)
-  // subscribeToEvent(TIME_KEEPER_ENABLE_PROPOSAL, callBackTimekeeperEnableProposal)
-  // //TimekeeperProposal Subscription
-  // log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${TIME_KEEPER_PROPOSAL}`)
-  // subscribeToEvent(TIME_KEEPER_PROPOSAL, callBackTimekeeperProposal)
-  // //ForceOpenProposal Subscription
-  // log.logger.info(`Subscription to event log for address ${factoryAddress} and event ${FORCE_OPEN_PROPOSAL}`)
-  // subscribeToEvent(FORCE_OPEN_PROPOSAL, callBackForceOpenProposal)
-
   }
 
   //----------------------------------------------------------------------------------------------------------
