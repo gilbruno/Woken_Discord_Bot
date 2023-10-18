@@ -1,3 +1,4 @@
+import { TIME_KEEPER_CHANGE, TIME_KEEPER_PROPOSAL } from "../const/constants";
 import { networkSchema, network } from "../discord/hook/websocket/types";
 import { Template } from "../templates/types";
 
@@ -17,13 +18,24 @@ export function joinString<T extends string[]>(...strings: T): Concat<T> {
       : never
     : '';
 
+//----------------------------------------------------------------------------------------------------------
+function keyExists<T extends object>(obj: T, key: keyof any): key is keyof T {
+  return key in obj;
+}
 
 //----------------------------------------------------------------------------------------------------------
 export function buildNotificationText(templates: Template, eventName: string, replacements: any) {
   let template = templates[eventName]
+  if (eventName == TIME_KEEPER_CHANGE || eventName == TIME_KEEPER_PROPOSAL) {
+    if (keyExists(replacements, 'isOnlyDay') && replacements['isOnlyDay'] === true) {
+      template = templates[eventName+'_isOnlyDay']
+    }
+  }
+  
   for (const key in replacements) {
     template = template.replace(`{{${key}}}`, replacements[key])
   }
+  
   return template
 }    
 

@@ -33,6 +33,22 @@ Pair: {{pairAddress}}
 Signer: {{signer}}
 ------------------------------------
     `,
+    'TimekeeperProposal_isOnlyDay': `
+Hey Woken Team !
+A new event awaiting for approval was emitted
+
+:clock3: **TimekeeperProposal** 
+
+Symbol: {{pairSymbol}}
+DaysOpenLP: {{daysOpen}}
+utcOffset: {{utcOffset}}
+isOnlyDay: {{isOnlyDay}}
+
+Chain: {{chain}}
+Pair: {{pairAddress}}
+Signer: {{signer}}
+------------------------------------
+    `,
     'TimekeeperEnableProposal': `
 Hey Woken Team !
 A new event awaiting for approval was emitted
@@ -66,6 +82,19 @@ Symbol: {{pairSymbol}}
 Days open: {{daysOpen}}
 Opening hours: {{openingHours}}:{{openingMinutes}}
 Closing hours: {{closingHours}}:{{closingMinutes}}
+UTC: {{utcOffset}}
+24h/day: {{isOnlyDay}}
+
+Chain: {{chain}}
+Pair: {{pairAddress}}
+Signer: {{signer}}
+------------------------------------
+    `,
+    'TimekeeperChange_isOnlyDay': `
+:clock3: **TimekeeperChange** event
+
+Symbol: {{pairSymbol}}
+Days open: {{daysOpen}}
 UTC: {{utcOffset}}
 24h/day: {{isOnlyDay}}
 
