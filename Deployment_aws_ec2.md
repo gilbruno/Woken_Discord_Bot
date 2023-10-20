@@ -31,6 +31,8 @@ Ex :
 cd Woken_Discord_Bot
 ```
 
+or the name of your discord project
+
 ## Step 5
 
 Get the last version of the application
@@ -39,7 +41,47 @@ Get the last version of the application
 git pull
 ```
 
+Then if your smart contracts do not have changed go directly to step #9, 
+otherwise follow these steps.
+
 ## Step 6
+Generate the ABI of your new smart contract in Remix (There's a button to do this under 'Compile' tab)
+
+## Step 7
+
+In your project, go into the _.abi_ directory.
+Empty the content of the ABI smart contract you want to update.<br>
+For instance, if it's _UniswapV2Factory.json_, you can empty the content of the file with the following command
+
+```
+> UniswapV2Factory.json
+```
+
+## Step 8
+
+Copy the new ABI content into the file.
+Edit the file with the command 
+
+```
+nano UniswapV2Factory.json
+```
+
+Then Paste the content.
+Save the newly updated file.
+
+CTRL + O <br>
+
+then <br>
+
+ENTER <br>
+
+then <br>
+
+CTRL + X to go out the file<br>
+
+
+
+## Step 9
 
 Compile the app with this last version
 
@@ -48,7 +90,7 @@ npm run build
 ```
 
 
-## Step 7
+## Step 10
 
 Restart the app with PM2 thanks to the id or name of the app.
 
@@ -62,7 +104,7 @@ To know the name of the app, just launch :
 pm2 status
 ```
 
-## Step 8
+## Step 11
 
 Check that everything is OK with logs : 
 
@@ -70,7 +112,7 @@ Check that everything is OK with logs :
 pm2 log <id_or_name_app>
 ```
 
-## Step 9
+## Step 12
 
 Enjoy & Chill out : your app is running !
 
