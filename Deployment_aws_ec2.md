@@ -109,7 +109,7 @@ npm run build
 ## Step 10
 
 Restart the app with PM2 thanks to the id or name of the app.
-<b>
+<br>
 
 For these _pm2_ command, you do not have to be at the root directory of your app.
 <br>
