@@ -49,7 +49,12 @@ Generate the ABI of your new smart contract in Remix (There's a button to do thi
 
 ## Step 7
 
-In your project, go into the _.abi_ directory.
+In your project, go into the _.abi_ directory.<br>
+
+```
+cd .abi
+```
+
 Empty the content of the ABI smart contract you want to update.<br>
 For instance, if it's _UniswapV2Factory.json_, you can empty the content of the file with the following command
 
