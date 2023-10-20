@@ -89,8 +89,8 @@ CTRL + X to go out the file<br>
 ## Step 9
 
 Compile the app with this last version.<br>
-You must be at the root directory of your project.
-So if your project is Woken-Bot-Goerli, you must be in the root directory of _Woken-Bot-Goerli_.
+You must be at the root directory of your project.<br>
+So if your project is _Woken-Bot-Goerli_, you must be in the root directory of _Woken-Bot-Goerli_.
 If you are lost and do not know where you are, just type : 
 
 ```
