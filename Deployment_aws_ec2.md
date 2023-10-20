@@ -83,7 +83,18 @@ CTRL + X to go out the file<br>
 
 ## Step 9
 
-Compile the app with this last version
+Compile the app with this last version.<br>
+You must be at the root directory of your project.
+So if your project is Woken-Bot-Goerli, you must be in the root directory of _Woken-Bot-Goerli_.
+If you are lost and do not know where you are, just type : 
+
+```
+pwd
+```
+
+this will indicate you which directory you are in
+
+So, go to the root directory of your app, then type : 
 
 ```
 npm run build
@@ -93,6 +104,11 @@ npm run build
 ## Step 10
 
 Restart the app with PM2 thanks to the id or name of the app.
+<b>
+
+For these _pm2_ command, you do not have to be at the root directory of your app.
+<br>
+You can type these commands anywhere as _pm2_ is installed globally
 
 ```
 pm2 restart <id_or_name_app>
