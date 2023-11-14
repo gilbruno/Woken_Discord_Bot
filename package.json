@@ -18,7 +18,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "pm2:start:hook": "pm2 start dist/index.js --name woken-bot -- --app=hook",
     "pm2:start:ws:goerli": "pm2 start dist/index.js --name woken-bot-websocket-goerli -- --app=websocket",
-    "pm2:start:ws:bsc:testnet": "pm2 start dist/index.js --name woken-bot-websocket-bsc-testnet -- --app=websocket_etherjs"
+    "pm2:start:ws:bsc:testnet": "pm2 start dist/index.js --name woken-bot-websocket-bsc-testnet -- --app=websocket_etherjs",
+    "pm2:start:ws:arbitrum:mainnet": "pm2 start dist/index.js --name woken-bot-websocket-arbitrum-mainnet -- --app=websocket_etherjs"
   },
   "keywords": [],
   "author": "",
