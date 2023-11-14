@@ -59,7 +59,7 @@ Empty the content of the ABI smart contract you want to update.<br>
 For instance, if it's _UniswapV2Factory.json_, you can empty the content of the file with the following command
 
 ```
-> UniswapV2Factory.json
+> WokenFactory.json
 ```
 
 ## Step 8
@@ -68,7 +68,7 @@ Copy the new ABI content into the file.
 Edit the file with the command 
 
 ```
-nano UniswapV2Factory.json
+nano WokenFactory.json
 ```
 
 Then Paste the content.

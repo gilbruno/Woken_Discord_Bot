@@ -8,7 +8,7 @@ export class Inquirer {
 
     public answers : Answer
     
-    private readonly CONTRACT_NAME = 'UniswapV2Factory'
+    private readonly CONTRACT_NAME = 'WokenFactory'
 
     //----------------------------------------------------------------------------------------------------------
     private async buildQuestions() {

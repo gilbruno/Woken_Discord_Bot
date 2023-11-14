@@ -7,5 +7,5 @@ export const FORCE_OPEN                    = 'ForceOpen' as const
 export const ROLE_PAIR_ADMIN_DAO_REQUESTED = 'RolePairAdminDaoRequested' as const
 export const ROLE_PAIR_ADMIN_REQUESTED     = 'RolePairAdminRequested' as const
 export const PAIR_CREATED                  = 'PairCreated' as const
-export const CONTRACT_NAME                 = 'UniswapV2Factory' as const
+export const CONTRACT_NAME                 = 'WokenFactory' as const
 

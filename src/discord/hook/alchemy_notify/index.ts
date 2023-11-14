@@ -8,7 +8,7 @@ export async function alchemy_notify(): Promise<void> {
   
     const port = `${process.env.PORT}`;
     
-    const CONTRACT_NAME = 'UniswapV2Factory'
+    const CONTRACT_NAME = 'WokenFactory'
 
     // Parse the request body as JSON
     app.use(bodyParser.json());

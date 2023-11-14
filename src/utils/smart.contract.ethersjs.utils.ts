@@ -8,7 +8,7 @@ export type tokenNumber = 0 | 1
 
 class EtherJsSmartContractUtils {
 
-    public static FACTORY_CONTRACT_NAME = 'UniswapV2Factory' as const 
+    public static FACTORY_CONTRACT_NAME = 'WokenFactory' as const 
 
     private static UNISWAP_PAIR_CONTRACT_NAME = 'UniswapV2Pair' as const 
 
