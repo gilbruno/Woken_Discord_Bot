@@ -31,6 +31,8 @@ isOnlyDay: {{isOnlyDay}}
 Chain: {{chain}}
 Pair: {{pairAddress}}
 Signer: {{signer}}
+
+Vote: https://woken.exchange/vote
 ------------------------------------
     `,
     'TimekeeperProposal_isOnlyDay': `
@@ -47,6 +49,8 @@ isOnlyDay: {{isOnlyDay}}
 Chain: {{chain}}
 Pair: {{pairAddress}}
 Signer: {{signer}}
+
+Vote: https://woken.exchange/vote
 ------------------------------------
     `,
     'TimekeeperEnableProposal': `
@@ -61,6 +65,8 @@ Bool : {{value}}
 Chain: {{chain}}
 Pair : {{pairAddress}}
 Signer: {{signer}}
+
+Vote: https://woken.exchange/vote
 ------------------------------------
     `,
     'PairCreated': `
