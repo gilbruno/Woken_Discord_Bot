@@ -16,7 +16,7 @@ Signer: {{signer}}
 ------------------------------------
         `,
     'TimekeeperProposal': `
-Hey Woken Team !
+Hey Woken Members !
 A new event awaiting for approval was emitted
 
 :clock3: **TimekeeperProposal** 
