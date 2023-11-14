@@ -31,12 +31,12 @@ export interface ChainInfo {
     chainId: number;
 }
 
-//export type eventName = 'TimekeeperEnableProposal' | 'TimekeeperProposal' | 'ForceOpenProposal' | 'PairCreated'
+//export type eventName = 'TimekeeperEnableProposal' | 'TimekeeperProposal' | 'ForceOpenTimelock' | 'PairCreated'
 
 export enum EventName {
     TimekeeperEnableProposal  = 'TimekeeperEnableProposal',
     TimekeeperProposal        = 'TimekeeperProposal',
-    ForceOpenProposal         = 'ForceOpenProposal',
+    ForceOpenTimelock         = 'ForceOpenTimelock',
     PairCreated               = 'PairCreated',
     TimekeeperChange          = 'TimekeeperChange',
     TimekeeperEnable          = 'TimekeeperEnable',

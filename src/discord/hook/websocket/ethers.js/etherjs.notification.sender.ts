@@ -4,7 +4,7 @@ import { decodeLogs } from "../../../../utils/ethers.utils"
 import { WokenHook } from "../../woken.hook"
 import { replacementsTemplate } from "../types"
 import { buildNotificationText, isSmartContractEventProposal, isSmartContractEventRole, leftPadWithZero, transformBinaryListByDaysOfWeek } from "../../../../utils/utils"
-import { CONTRACT_NAME, FORCE_OPEN, FORCE_OPEN_PROPOSAL, PAIR_CREATED, ROLE_PAIR_ADMIN_DAO_REQUESTED, ROLE_PAIR_ADMIN_REQUESTED, TIME_KEEPER_CHANGE, TIME_KEEPER_ENABLE, TIME_KEEPER_ENABLE_PROPOSAL, TIME_KEEPER_PROPOSAL } from "../../../../const/constants"
+import { CONTRACT_NAME, FORCE_OPEN, FORCE_OPEN_TIMELOCK, PAIR_CREATED, ROLE_PAIR_ADMIN_DAO_REQUESTED, ROLE_PAIR_ADMIN_REQUESTED, TIME_KEEPER_CHANGE, TIME_KEEPER_ENABLE, TIME_KEEPER_ENABLE_PROPOSAL, TIME_KEEPER_PROPOSAL } from "../../../../const/constants"
 import EtherJsSmartContractUtils from "../../../../utils/smart.contract.ethersjs.utils"
 import { JsonRpcProvider } from "@ethersproject/providers"
 import { EventDescriptor } from "./ethersjs.event.handler"
@@ -57,7 +57,7 @@ export class EthersJsNotificationSender implements IEthersJsNotificationSender {
       let replacements: replacementsTemplate = {} 
 
       if (eventName === TIME_KEEPER_ENABLE_PROPOSAL 
-        || eventName === FORCE_OPEN_PROPOSAL 
+        || eventName === FORCE_OPEN_TIMELOCK 
         || eventName === FORCE_OPEN 
         || eventName === TIME_KEEPER_ENABLE) {
           
@@ -65,8 +65,8 @@ export class EthersJsNotificationSender implements IEthersJsNotificationSender {
             case FORCE_OPEN :
               boolValue = await EtherJsSmartContractUtils.isForceOpen(this.factoryAddress, this.provider, pairAddress)
               break;
-            case FORCE_OPEN_PROPOSAL :
-              boolValue = await EtherJsSmartContractUtils.isForceOpenProposal(this.factoryAddress, this.provider, pairAddress)
+            case FORCE_OPEN_TIMELOCK :
+              boolValue = await EtherJsSmartContractUtils.isForceOpenTimelock(this.factoryAddress, this.provider, pairAddress)
               break;
             case TIME_KEEPER_ENABLE :
               boolValue = await EtherJsSmartContractUtils.isTimekeeperEnabledLP(this.factoryAddress, this.provider, pairAddress)

@@ -25,7 +25,7 @@ export class EthersJsWebsocket implements IEthersJsWebsocket{
   private eventsName = [
     'TimekeeperEnableProposal',
     'TimekeeperProposal',
-    'ForceOpenProposal',
+    'ForceOpenTimelock',
     'PairCreated',
     'TimekeeperChange',
     'TimekeeperEnable',

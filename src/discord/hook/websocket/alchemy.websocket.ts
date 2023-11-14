@@ -23,7 +23,7 @@ export class AlchemyWebsocket implements IAlchemyWebsocket {
   public events: Record<EventName, callbackWebSocket> = {
     'TimekeeperEnableProposal' : (tx) => this.handleEvent(tx, EventName.TimekeeperEnableProposal),
     'TimekeeperProposal': (tx) => this.handleEvent(tx, EventName.TimekeeperProposal),
-    'ForceOpenProposal': (tx) => this.handleEvent(tx, EventName.ForceOpenProposal),
+    'ForceOpenTimelock': (tx) => this.handleEvent(tx, EventName.ForceOpenTimelock),
     'PairCreated': (tx) => this.handleEvent(tx, EventName.PairCreated),
     'TimekeeperChange': (tx) => this.handleEvent(tx, EventName.TimekeeperChange),
     'TimekeeperEnable': (tx) => this.handleEvent(tx, EventName.TimekeeperEnable),

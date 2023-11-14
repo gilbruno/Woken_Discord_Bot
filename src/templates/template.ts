@@ -1,11 +1,11 @@
 import { Template } from "./types";
 
 export const templates: Template = {
-    'ForceOpenProposal': `
-Hey Woken Team ! 
-A new event awaiting for approval was emitted
+    'ForceOpenTimelock': `
+Hey Woken Members ! 
+A new event was emitted by the Dex Admin
 
-:rotating_light: **ForceOpenProposal**
+:rotating_light: **ForceOpenTimelock (48h)**
 
 Symbol: {{pairSymbol}}
 Bool: {{value}}
@@ -34,7 +34,7 @@ Signer: {{signer}}
 ------------------------------------
     `,
     'TimekeeperProposal_isOnlyDay': `
-Hey Woken Team !
+Hey Woken Members !
 A new event awaiting for approval was emitted
 
 :clock3: **TimekeeperProposal** 
@@ -50,7 +50,7 @@ Signer: {{signer}}
 ------------------------------------
     `,
     'TimekeeperEnableProposal': `
-Hey Woken Team !
+Hey Woken Members !
 A new event awaiting for approval was emitted
         
 :gear: **TimekeeperEnableProposal**

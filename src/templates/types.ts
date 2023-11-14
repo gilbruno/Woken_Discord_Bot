@@ -1,7 +1,7 @@
 export type Template = Record<TemplateType, string>
 
 type TemplateType = 
-    'ForceOpenProposal' 
+    'ForceOpenTimelock' 
     |'TimekeeperProposal' 
     |'TimekeeperProposal_isOnlyDay' 
     | 'TimekeeperEnableProposal' 

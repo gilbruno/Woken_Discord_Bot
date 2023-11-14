@@ -1,4 +1,4 @@
-import { CONTRACT_NAME, FORCE_OPEN, FORCE_OPEN_PROPOSAL, PAIR_CREATED, ROLE_PAIR_ADMIN_DAO_REQUESTED, ROLE_PAIR_ADMIN_REQUESTED, TIME_KEEPER_CHANGE, TIME_KEEPER_ENABLE, TIME_KEEPER_ENABLE_PROPOSAL, TIME_KEEPER_PROPOSAL } from "../../../const/constants"
+import { CONTRACT_NAME, FORCE_OPEN, FORCE_OPEN_TIMELOCK, PAIR_CREATED, ROLE_PAIR_ADMIN_DAO_REQUESTED, ROLE_PAIR_ADMIN_REQUESTED, TIME_KEEPER_CHANGE, TIME_KEEPER_ENABLE, TIME_KEEPER_ENABLE_PROPOSAL, TIME_KEEPER_PROPOSAL } from "../../../const/constants"
 import { Log } from "../../../logger/log"
 import { templates } from "../../../templates/template"
 import { decodeLogs, getLogsByTx, getSigner, getTransactionInfos } from "../../../utils/ethers.utils"
@@ -56,7 +56,7 @@ export class NotificationSender implements INotificationSender {
         pairSymbol = tokenSymbol0+'-'+tokenSymbol1
   
         if (eventName === TIME_KEEPER_ENABLE_PROPOSAL 
-            || eventName === FORCE_OPEN_PROPOSAL 
+            || eventName === FORCE_OPEN_TIMELOCK 
             || eventName === FORCE_OPEN 
             || eventName === TIME_KEEPER_ENABLE) {
               
@@ -64,8 +64,8 @@ export class NotificationSender implements INotificationSender {
                 case FORCE_OPEN :
                   boolValue = await SmartContractUtils.isForceOpen(this.factoryAddress, this.provider, pairAddress)
                   break;
-                case FORCE_OPEN_PROPOSAL :
-                  boolValue = await SmartContractUtils.isForceOpenProposal(this.factoryAddress, this.provider, pairAddress)
+                case FORCE_OPEN_TIMELOCK :
+                  boolValue = await SmartContractUtils.isForceOpenTimelock(this.factoryAddress, this.provider, pairAddress)
                   break;
                 case TIME_KEEPER_ENABLE :
                   boolValue = await SmartContractUtils.isTimekeeperEnabledLP(this.factoryAddress, this.provider, pairAddress)

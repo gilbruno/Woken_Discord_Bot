@@ -122,9 +122,9 @@ class EtherJsSmartContractUtils {
     }
 
     //----------------------------------------------------------------------------------------------------------
-    public static async isForceOpenProposal(factoryAddress: string, provider: JsonRpcProvider, addressPair: string) {
-        const isForceOpenProposal = await this.getContractFactoryInstance(factoryAddress, provider).isForceOpenProposal(addressPair)
-        return isForceOpenProposal
+    public static async isForceOpenTimelock(factoryAddress: string, provider: JsonRpcProvider, addressPair: string) {
+        const isForceOpenTimelock = await this.getContractFactoryInstance(factoryAddress, provider).isForceOpenTimelock(addressPair)
+        return isForceOpenTimelock
     }
 
     //----------------------------------------------------------------------------------------------------------
