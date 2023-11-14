@@ -9,7 +9,7 @@ class SmartContractUtils {
 
     private static FACTORY_CONTRACT_NAME = 'WokenFactory' as const 
 
-    private static UNISWAP_PAIR_CONTRACT_NAME = 'UniswapV2Pair' as const 
+    private static UNISWAP_PAIR_CONTRACT_NAME = 'WokenPair' as const 
 
     private static ERC20_CONTRACT_NAME = 'IERC20' as const 
 

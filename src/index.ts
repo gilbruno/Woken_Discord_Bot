@@ -80,23 +80,8 @@ async function webSocketEtherJs() {
     const rpcUrl: string          = process.env.RPC_URL
     const chainId: string         = process.env.CHAIN_ID
     const factoryAddress: string  = process.env.FACTORY_ADDRESS
-    const networkSet: networkType = process.env.NETWORK 
-    const settings = {
-        apiKey: apiKey, 
-        network: networkSet
-      }
     const log       = new Log()
     
-    // Validate network before instantiating AlchemyWebsocket
-     const network  = {
-        type: networkSet
-      }
-     const errorNetwork = await isNetworkValid(network)
-
-     if (errorNetwork) {
-       throw new Error(errorNetwork)
-     }
-     
     // Usage
     const chains = EtherJsSmartContractUtils.getAllChains()
     const chain = chains.filter(

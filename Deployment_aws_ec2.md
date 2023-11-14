@@ -56,7 +56,7 @@ cd .abi
 ```
 
 Empty the content of the ABI smart contract you want to update.<br>
-For instance, if it's _UniswapV2Factory.json_, you can empty the content of the file with the following command
+For instance, if it's _WokenFactory.json_, you can empty the content of the file with the following command
 
 ```
 > WokenFactory.json
