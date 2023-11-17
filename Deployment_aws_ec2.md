@@ -23,7 +23,8 @@ sudo su
 
 ## Step 4
 
-Go to the directory root of the application
+Go to the directory root of the application. 
+So if your app is called _Woken_Discord_Bot_
 
 Ex : 
 
@@ -31,7 +32,6 @@ Ex :
 cd Woken_Discord_Bot
 ```
 
-or the name of your discord project
 
 ## Step 5
 
