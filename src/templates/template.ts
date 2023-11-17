@@ -32,7 +32,7 @@ Chain: {{chain}}
 Pair: {{pairAddress}}
 Signer: {{signer}}
 
-Vote: https://woken.exchange/vote
+Vote: https://app.woken.exchange/vote
 ------------------------------------
     `,
     'TimekeeperProposal_isOnlyDay': `
@@ -50,7 +50,7 @@ Chain: {{chain}}
 Pair: {{pairAddress}}
 Signer: {{signer}}
 
-Vote: https://woken.exchange/vote
+Vote: https://app.woken.exchange/vote
 ------------------------------------
     `,
     'TimekeeperEnableProposal': `
@@ -66,7 +66,7 @@ Chain: {{chain}}
 Pair : {{pairAddress}}
 Signer: {{signer}}
 
-Vote: https://woken.exchange/vote
+Vote: https://app.woken.exchange/vote
 ------------------------------------
     `,
     'PairCreated': `
